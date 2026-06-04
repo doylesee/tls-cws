@@ -1,0 +1,126 @@
+{% comment %}Capturing company name into a variable for use within code{% endcomment %}
+{% capture cb_company_name %}TELUS Digital{% endcapture %}
+
+{% comment %}Site Names{% endcomment %}
+{% if root_url contains 'fde096' or root_url contains 'teluscareersexternal-dev.ttcportals.com' or root_url contains 'careers.telusdigital.com' %}
+    {% capture cb_site_type %}external{% endcapture %}
+{% elsif root_url contains '6583bb' or root_url contains 'teluscareersinternal-dev.ttcportals.com' or root_url contains 'internalcareers.telusdigital.com' %}
+    {% capture cb_site_type %}internal{% endcapture %}
+{% elsif root_url contains 'teluscareersevents-dev.ttcportals.com' %}
+    {% capture cb_site_type %}event{% endcapture %}
+{% endif %}
+
+{% comment %}Capture current locale permalink{% endcomment %}
+{% capture cb_locale_permalink %}/{{ current_locale.locale }}{% endcapture %}
+
+{% comment %}set is_referral_site variable{% endcomment %}
+{% capture cb_is_referral_site %}false{% endcapture %}
+
+{% comment %}set is_job_details variable{% endcomment %}
+{% if request_path contains '/referrals/' %}
+    {% capture cb_is_referral_page %}true{% endcapture %}
+{% endif %}
+{% if cb_site_type == 'internal' %}
+    {% if job and cb_is_referral_page == 'true' %}
+        {% capture cb_is_internal_job_details %}false{% endcapture %}
+    {% else %}
+        {% capture cb_is_internal_job_details %}true{% endcapture %}
+    {% endif %}
+{% endif %}
+
+{% comment %}Detecting if Careers Home page{% endcomment %}
+{% capture current_locale_locale_down %}{{ current_locale.locale | downcase }}{% endcapture %}
+{% if template.permalink == 'career_site_home_page' or template.permalink == current_locale_locale_down %}
+    {% capture cb_is_home_page %}true{% endcapture %}
+{% endif %}
+
+{% comment %}Detecting if Category page{% endcomment %}
+{% if params['ns_category'] != blank %}
+    {% capture cb_is_category_page %}true{% endcapture %}
+
+    {% if cb_site_type == 'internal' and params['ns_category'] == 'referral-portal' %}{% comment %}Referral Portal page MUST have the 'referral-portal-jobs-content' tag!{% endcomment %}
+        {% capture cb_is_referral_portal_page %}true{% endcapture %}
+    {% endif %}
+{% endif %}
+
+{% comment %}Detecting if Job Search Results page{% endcomment %}
+{% if request.path contains '/search' and request.path contains '/jobs' and cb_is_category_page != 'true' %}
+    {% capture cb_is_job_search %}true{% endcapture %}
+{% endif %}
+
+{% comment %}
+Capture Country-specific field - for Internal site only
+2026/03/18 Karla Hurtado: We need the jobs to be visibile based on the Country form the employee profile.
+The visibility based on the IP address would not work because we have teams working with VPN and  moving from one country to another, and we need to avoid jobs visibility to be affected. 
+This means that if my employee country is El Salvador, I need to see El Salvador referral positions independently if I'm in Guatemala or connected with a VPN to the US.
+This is also important to the Intercompany Referral Pgrogrgam for Europe described above.
+{% endcomment %}
+{% if cb_site_type == 'internal' %}
+    {% comment %}Capture user's country - user profile MUST have a country, otherwise this won't work correctly / Job List will NOT display{% endcomment %}
+    {% capture cb_user_country %}{{ user.country_name }}{% endcapture %}
+
+    {% comment %}Check if user's country is in the EU country list by Telus{% endcomment %}
+    {% capture cb_eu_country_list %}Bosnia and Herzegovina;Bulgaria;Ireland;Latvia;Poland;Romania;Turkiye{% endcapture %}
+    {% assign eu_countries = cb_eu_country_list | split: ';' %}
+
+    {% if eu_countries contains cb_user_country %}
+      {% capture cb_user_is_in_eu %}true{% endcapture %}
+    {% endif %}
+
+    {% if cb_user_country != blank %}
+        {% if cb_user_is_in_eu == 'true' %}
+            {% capture cb_location_country_field %}{% for eu_country in eu_countries %}<input type="hidden" name="location_country[]" value="{{ eu_country }}">{% endfor %}{% endcapture %}
+            {% capture cb_location_country_params %}{% for eu_country in eu_countries %}&location_country[]={{ eu_country }}{% endfor %}{% endcapture %}
+
+        {% else %}
+            {% capture cb_location_country_field %}<input type="hidden" name="location_country" value="{{ cb_user_country }}">{% endcapture %}
+            {% capture cb_location_country_params %}&location_country={{ cb_user_country }}{% endcapture %}
+        {% endif %}
+
+    {% endif %}
+{% endif %}
+
+{% comment %}
+2026-March-24, Karla Hurtado:
+Supress the Internal Careers until May 1st. The idea will be that once you click over the "Apply Now" button in the Internal Careers category in the home page, to be redirected to a page that says that it is under development and it will be live starting May 1st.
+DS: since we're basically only showing jobs that can be referred, we are then forcing the 'Referral Portal' page parameters on here.
+Updates:
+- layout-banner temporary_referral_portal_params
+{% endcomment %}
+{% capture temporary_referral_portal_params %}
+{% if cb_site_type == 'internal' %}
+    {% capture cb_is_referral_portal_page %}true{% endcapture %}
+    <input type="hidden" name="cfm21" value="Yes" />
+    <input type="hidden" name="ns_category" value="referral-portal" />
+    {{ cb_location_country_field }}
+{% endif %}
+{% endcapture %}
+
+{% comment %}Job Search form is captured in a variable for scenarios where the Job Search page does not have a banner; see /jobs/search.liquid{% endcomment %}
+{% capture cb_job_search_form %}
+<section class="hide-for-print padded-v-large branded-search">
+    <div class="space-small"></div>
+    <div class="cs_item_type_jobsearch cs_cfix cs_jsearchform">
+        <form id="search_form---" method="get" action="/{{ current_locale.locale }}/search/jobs" class="search-form">
+            <div class="row">
+                <div class="column medium-10 medium-offset-1 end large-12 large-offset-0">
+                    <div class="row---">
+                        <div class="columns space-small columns--keyword">
+                            <label for="cs_jobsearchforminput_keyword" class="show-for-sr">{{ text_keyword_placeholder }}</label>
+                            <input type="text" placeholder="{{ text_keyword_placeholder }}" id="cs_jobsearchforminput_keyword" class="ui-autocomplete-input" autocomplete="off" name="q" value="{{ params['q'] | escape_html }}"><span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+                        </div>
+                        <div class="columns space-small columns--location">
+                            <label for="search__location" class="show-for-sr">{{ text_location_placeholder }}</label>
+                            <input type="text" name="location" value="{{ params['location'] | escape_html }}" placeholder="{{ text_location_placeholder }}" id="search__location" />
+                        </div>
+                        {{ temporary_referral_portal_params }}
+                        <div class="columns space-small columns--submit">
+                            <button type="submit" class="branded-button-1 branded-button-normal">{{ text_search_button }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div><!--close .cs_item_type_jobsearch.cs_cfix cs_jsearchform-->
+</section><!--close .branded-search-->
+{% endcapture %}

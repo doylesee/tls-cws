@@ -1,0 +1,16 @@
+{% capture page_section_content_formatted %}{{ page_section_content | replace: '<p>','---' | replace: '</p>','---' }}{% endcapture %}
+{% assign page_section_content_array = page_section_content_formatted | split: '---' | assign_to: 'page_section_attr' %}
+{% assign section_image = page_section_attr[1] | strip %}
+
+{% capture section_image_wp %}<p>{{ section_image }}</p>{% endcapture %}
+
+<div class="row row--centered-columns">
+    <div class="columns large-6">
+        <div class="padded-h-large padded-v-xlarge">
+            {{ page_section_content | remove: section_image_wp }}
+        </div>
+    </div>
+    <div class="columns large-6">
+        {{ section_image }}
+    </div>
+</div>

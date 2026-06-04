@@ -1,0 +1,61 @@
+{% capture page_content_formatted %}{{ page_section_content | replace_global_regex: '\n|\r','' | replace: '<pre>ITEM ENDITEM START</pre>','</div>------<div class="item">' | replace: '<pre>ITEM START</pre>','---<div class="item">' | replace: '<pre>ITEM END</pre>','</div>---' }}{% endcapture %}
+{% assign page_content_array = page_content_formatted | split: '---' | assign_to: 'page_elements' %}
+
+{% capture column_contents %}{% endcapture %}
+{% assign row_index = 0 %}
+{% capture row_index_close_tags %}
+</ul>
+</div><!--close .column-->
+</div><!--close .row-->
+{% endcapture %}
+
+{% for page_element in page_elements %}
+	{% if page_element contains '<div class="item">' %}
+		{% capture column_contents %}
+		{{ column_contents }}
+
+		{% if row_index == 0 %}
+			{% assign row_index = 1 %}
+			<div class="row">
+			<div class="column">
+			<ul class="accordion" data-accordion data-multi-expand="true" data-allow-all-closed="true">
+		{% endif %}
+
+		{% capture page_element_content_formatted %}{{ page_element | replace: '<h2>','---' | replace: '</h2>','---' }}{% endcapture %}
+        {% assign page_element_content_array = page_element_content_formatted | split: '---' | assign_to: 'page_element_attr' %}
+
+        {% assign accordion_heading = page_element_attr[1] | strip %}
+        {% capture accordion_heading_wh %}<h2>{{ accordion_heading }}</h2>{% endcapture %}
+
+        <li class="accordion-item" data-accordion-item>
+    		<a href="#" class="accordion-title">{{ accordion_heading }}</a>
+    		<div class="accordion-content background-white-opaque" data-tab-content>{{ page_element | remove: accordion_heading_wh }}</div>
+  		</li>
+		{% endcapture %}
+
+	{% elsif page_element != '' %}
+		{% capture column_contents %}
+		{{ column_contents }}
+
+		{% if row_index == 1 %}
+			{% assign row_index = 0 %}
+			{{ row_index_close_tags }}
+		{% endif %}
+		
+		<div class="row">
+	        <div class="column large-6 end">
+	        	<div class="background-white-opaque">{{ page_element }}</div>
+	        </div>
+	    </div>
+		{% endcapture %}
+	{% endif %}
+{% endfor %}
+
+{% capture column_contents %}
+{{ column_contents }}
+{% if row_index == 1 %}
+	{{ row_index_close_tags }}
+{% endif %}
+{% endcapture %}
+
+{{ column_contents }}

@@ -1,0 +1,102 @@
+{% include '/_config__variables' %}
+
+{% comment %}Capture Banner-specific content from the page object's .content{% endcomment %}
+{% capture banner_content_formatted %}{{ page_section_content | replace: '<p>','---' | replace: '</p>','---' }}{% endcapture %}
+{% assign banner_content_array = banner_content_formatted | split: '---' | assign_to: 'banner_element' %}
+{% assign banner_media = banner_element[1] | strip %}
+
+{% comment %}Capture whether Banner's possible media is either image or video{% endcomment %}
+{% capture banner_has_image %}false{% endcapture %}
+{% capture banner_has_video %}false{% endcapture %}
+
+{% if banner_media contains '<img' %}
+    {% capture banner_has_image %}true{% endcapture %}
+
+{% elsif banner_media contains '.mp4' %}
+    {% capture banner_has_video %}true{% endcapture %}
+    {{ banner_media | split: ',' | assign_to: 'banner_video_attrs' }}
+    {% assign banner_video_url = banner_video_attrs[0] %}
+    {% assign banner_video_label = banner_video_attrs[1] %}
+
+{% endif %}
+
+{% if banner_has_image == 'true' or banner_has_video == 'true' %}
+    {% capture banner_media_wp %}<p>{{ banner_media }}</p>{% endcapture %}
+{% endif %}
+
+<div class="page-banner padded-v-xlarge">
+    <div class="row padded-v-large">
+        <div class="column medium-8 medium-offset-2 large-6 large-offset-0 end padded-v-medium">
+            <div class="page-banner__copy">
+                {% if page_object %}
+                    <h1>{{ page_object.title | html_safe }}</h1>
+                    {{ page_section_content | remove: banner_media_wp }}
+                {% endif %}
+
+                {% if cb_is_home_page == 'true' %}
+                <div class="branded-search">
+                    <div class="space-small"></div>
+                    <div class="cs_item_type_jobsearch cs_cfix cs_jsearchform">
+                        <form id="search_form---" method="get" action="/{{ current_locale.locale }}/search/jobs" class="search-form">
+                            <div class="row">
+                                <div class="columns space-small">
+                                    <label for="cs_jobsearchforminput_keyword" class="show-for-sr">{{ text_keyword_placeholder }}</label>
+                                    <input type="text" placeholder="{{ text_keyword_placeholder }}" id="cs_jobsearchforminput_keyword" class="ui-autocomplete-input" autocomplete="off" name="q" value="{{ params['q'] | escape_html }}"><span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+                                </div>
+                                <div class="columns space-small">
+                                    <label for="search__location" class="show-for-sr">{{ text_location_placeholder }}</label>
+                                    <input type="text" name="location" value="{{ params['location'] | escape_html }}" placeholder="{{ text_location_placeholder }}" id="search__location" />
+                                </div>
+                                {{ temporary_referral_portal_params }}
+                                <div class="columns space-small">
+                                    <button type="submit" class="branded-button-1 branded-button-normal">{{ text_search_button }}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div><!--close .cs_item_type_jobsearch.cs_cfix cs_jsearchform-->
+                </div><!--close .branded-search-->
+                {% endif %}
+            </div><!--close .page-banner__copy-->
+        </div>
+    </div>
+    <div class="page-banner__video">
+        <div class="page-banner__video-bg">
+            <svg width="0" height="0" style="position:absolute;">
+                <defs>
+                    <clipPath id="gradient-curve-clip" clipPathUnits="objectBoundingBox">
+                        <path d="M 1 1 L 1 0 L 0.3331 0.1587 Q 0.0206 0.2513 0 0.4693 L 0 1 Z" />
+                    </clipPath>
+                </defs>
+            </svg>
+            <div class="clipped-gradient"></div>
+        </div>
+
+        {% if banner_has_video == 'true' %}
+        <div class="page-banner__video-item">
+            <svg width="0" height="0" style="position:absolute;">
+                <defs>
+                    <clipPath id="fluid-curve-clip" clipPathUnits="objectBoundingBox">
+                        <path d="M 1 1 L 1 0.0667 L 0.3668 0.2148 Q 0.07 0.3013 0.0505 0.5046 L 0.0505 1 Z" />
+                    </clipPath>
+                </defs>
+            </svg>
+            <div class="clipped-media">
+                <video autoplay loop muted playsinline preload="auto" aria-label="{{ banner_video_label }}">
+                    <source src="{{ banner_video_url }}" type="video/mp4">
+                    {{ text_browser_video_tag_support }}
+                </video>
+            </div>  
+        </div>  
+        {% endif %} 
+
+        {% if banner_has_image == 'true' %}
+        <div class="page-banner__image">
+            {{ banner_media }}
+        </div>
+        {% endif %}
+    </div>
+</div><!--close .page-banner-->
+
+{% if cb_is_job_search == 'true' or cb_is_category_page == 'true' %}
+{{ cb_job_search_form }}
+{% endif %}

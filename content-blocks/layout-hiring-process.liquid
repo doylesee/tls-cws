@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="column">
+        {{ page_section_content }}
+    </div>
+</div>
+<div class="row">
+    <div class="column">
+        {% capture accordion_tab_content %}{% endcapture %}
+
+        {% for i in (1..employer.pages.size) %}
+            {% capture our_hiring_process_tab_order %}{% if current_locale.locale != 'en' %}{{ current_locale.locale }}-{% endif %}our-hiring-process-{{ forloop.index }}{% endcapture %}
+            {{ our_hiring_process_tab_order | pages_with_tag | assign_to: 'our_hiring_process_tab' }}
+
+            {% capture our_hiring_process_ta_heading_text %}{{ our_hiring_process_tab[0].title | html_safe }}{% endcapture %}
+
+            {% if our_hiring_process_tab.size > 0 %}
+                {% capture accordion_tab_content %}
+                {{ accordion_tab_content }}
+                <li class="accordion-item{% if forloop.index == 1 %} is-active{% endif %}" data-accordion-item>
+                    <a href="#" class="accordion-title">{{ our_hiring_process_ta_heading_text }}</a>
+                    <div class="accordion-content" data-tab-content>
+                        {% capture our_hiring_process_tab_content %}{{ our_hiring_process_tab[0].content }}{% endcapture %}
+                        {% include '/layout-hiring-process-sub' %}
+                    </div>
+                </li>
+                {% endcapture %}
+
+            {% else %}
+                {% break %}
+
+            {% endif %}
+        {% endfor %}
+
+        <ul class="accordion" data-responsive-accordion-tabs="accordion large-tabs">
+            {{ accordion_tab_content }}
+        </ul>
+    </div>
+</div>

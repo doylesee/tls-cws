@@ -1,0 +1,68 @@
+<!--START SUB-TAB CONTENT-->
+{% capture page_content_formatted %}{{ our_hiring_process_tab_content | replace_global_regex: '\n|\r','' | replace: '<pre>ITEM ENDITEM START</pre>','</div>------<div class="item">' | replace: '<pre>ITEM START</pre>','---<div class="item">' | replace: '<pre>ITEM END</pre>','</div>---' }}{% endcapture %}
+{% assign page_content_array = page_content_formatted | split: '---' | assign_to: 'page_elements' %}
+
+{% capture sub_tab_content_list %}{% endcapture %}
+{% capture sub_tab_list %}{% endcapture %}
+{% assign step_counter = 0 %}
+
+{% capture sub_tab_permalink %}{{ page_elements[0] | remove: '<p>' | remove: '</p>' }}{% endcapture %}
+
+{% for page_element in page_elements %}
+    {% if page_element contains '<div class="item">' %}
+
+        {% assign step_counter = step_counter | plus: 1 %}
+        {% assign image_index = step_counter | minus: 1 %}
+
+        {% capture page_element_content_formatted %}{{ page_element | replace: '<h3>','---' | replace: '</h3>','---' }}{% endcapture %}
+        {% assign page_element_content_array = page_element_content_formatted | split: '---' | assign_to: 'page_element_attr' %}
+        {% assign sub_tab_heading = page_element_attr[1] | strip %}
+
+        {% capture page_element_content_formatted %}{{ page_element | replace: '<p>','---' | replace: '</p>','---' }}{% endcapture %}
+        {% assign page_element_content_array = page_element_content_formatted | split: '---' | assign_to: 'page_element_attr' %}
+        {% assign sub_tab_blurb = page_element_attr[1] | strip %}
+        
+        {% capture sub_tab_content_list %}
+        {{ sub_tab_content_list }}
+        <div class="{{ step_counter }} tabs-panel{% if step_counter == 1 %} is-active{% endif %}" id="{{ our_hiring_process_tab[0].permalink }}-panel-{{ step_counter }}">
+            <div class="row">
+                <div class="columns large-6 large-push-6">
+                    {{ page_element }}
+                    <a href="{{ sub_tab_permalink }}" class="branded-button-2 branded-button-large show-for-large"{% if sub_tab_permalink contains 'http' %} target="_blank"{% endif %}>{{ text_search_button }}</a>
+                </div>
+                <div class="columns large-6 large-pull-6">
+                    <div class="subtabs-image">
+                        <img src="{{ our_hiring_process_tab[0].images[image_index].url }}" alt="{% if our_hiring_process_tab[0].images[image_index].title != our_hiring_process_tab[0].images[image_index].file_name %}{{ our_hiring_process_tab[0].images[image_index].title | html_safe }}{% endif %}" />
+                    </div>
+
+                    <div class="hide-for-large text-center">
+                        <div class="space-medium"></div>
+                        <a href="{{ sub_tab_permalink }}" class="branded-button-2 branded-button-large full-width---"{% if sub_tab_permalink contains 'http' %} target="_blank"{% endif %}>{{ text_search_button }}</a>
+                    </div>
+                </div>    
+            </div>
+        </div>
+        {% endcapture %}
+
+        {% capture sub_tab_list %}
+        {{ sub_tab_list }}
+        <li class="tabs-title{% if step_counter == 1 %} is-active{% endif %}">
+            <a href="#{{ our_hiring_process_tab[0].permalink }}-panel-{{ step_counter }}" aria-selected="true">
+                <div class="show-for-large space-medium"><span class="paragraph-4 padded-small">{{ text_step }} {{ step_counter }}</span></div>
+                <h3 class="space-medium">{{ sub_tab_heading }}</h3>
+                <p>{{ sub_tab_blurb }}</p>
+            </a>
+        </li>
+        {% endcapture %}
+
+    {% endif %}
+{% endfor %}
+
+<div class="tabs-content sub-tabs-content padded-medium" data-tabs-content="{{ our_hiring_process_tab[0].permalink }}-tabs">
+    {{ sub_tab_content_list }}
+</div>
+
+<ul class="tabs sub-tabs" data-tabs id="{{ our_hiring_process_tab[0].permalink }}-tabs">
+    {{ sub_tab_list }}
+</ul>
+<!--END SUB-TAB CONTENT-->

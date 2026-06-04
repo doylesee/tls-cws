@@ -1,0 +1,261 @@
+{% capture cb_company_name %}Telus Digital{% endcapture %}
+
+<!--Meta content-->
+{% capture text_careers_at_company %}Careers at {{ cb_company_name }}{% endcapture %}
+{% capture text_category_careers %}{{ category_pages[0].title | html_safe }} Careers at {{ cb_company_name }}{% endcapture %}
+{% capture text_facet_careers %}{{ selected_facets[0]["label"] | html_escape }} Careers at {{ cb_company_name }}{% endcapture %}
+{% capture text_search_facet_careers_at_company %}Search {% if job.total_entries > 0 %}{{ jobs.total_entries }}{% endif %} {{ selected_facets[0]["label"] | html_escape }} Careers available at {{ cb_company_name }}.{% endcapture %}
+{% capture text_search_careers_at_company %}Search {% if job.total_entries > 0 %}{{ jobs.total_entries }}{% endif %} Careers available at {{ cb_company_name }}.{% endcapture %}
+{% capture job_location %}
+{% if job.location.city != blank %}
+    {{ job.location.city }}{% if job.location.state_prov_short != blank or job.location.country != blank %},{% endif %}
+{% endif %}
+{% if job.location.state_prov_short != blank %}
+    {% capture job_location_state_prov_short_no_digit %}{{ job.location.state_prov_short | replace_global_regex: "[\d]", ":::" }}{% endcapture %}
+    {% if job_location_state_prov_short_no_digit contains ':::' %}
+        {{ job.location.state_prov }}{% if job.location.country != blank %},{% endif %}
+    {% else %}
+        {{ job.location.state_prov_short }}{% if job.location.country != blank %},{% endif %}
+    {% endif %}
+{% endif %}
+{% if job.location.country != blank %}{{ job.location.country }}{% endif %}
+{% endcapture %}
+{% capture seo_to_index %}{{ job.active? }}{% endcapture %}
+{% capture text_job_title_in_job_location %}{{ job.title }} in {{ job_location }} for {{ cb_company_name }}{% endcapture %}
+{% capture text_browser_video_tag_support %}Your browser does not support the video tag.{% endcapture %}
+
+<!--Header section-->
+{% capture text_skip_to_main_content %}Skip to main content{% endcapture %}
+{% capture text_menu %}Menu{% endcapture %}
+{% capture text_header_nav %}
+<li><a href="{{ root_url }}{{ current_locale.locale }}">Welcome</a></li>
+<li>
+    <a class="parent-item" aria-expanded="false" href="javascript:void(0);">Job Types</a>
+    <div class="child-item" aria-hidden="true">
+        <ul>
+            <li><a href="#">Sub Menu Item</a></li>
+            <li><a href="#">Sub Menu Item</a></li>
+            <li><a href="#">Sub Menu Item</a></li>
+        </ul>
+    </div>
+</li>
+<li>
+    <a class="parent-item" aria-expanded="false" href="javascript:void(0);">Locations</a>
+    <div class="child-item" aria-hidden="true">
+        <ul>
+            <li><a href="#">Sub Menu Item</a></li>
+            <li><a href="#">Sub Menu Item</a></li>
+            <li><a href="#">Sub Menu Item</a></li>
+        </ul>
+    </div>
+</li>
+<li><a href="/{{ current_locale.locale }}/search/jobs">All Jobs</a></li>
+{% endcapture %}
+{% capture text_login %}Login{% endcapture %}
+{% capture text_welcome_user %}Welcome, {{ user.first_name }} {{ user.last_name }}!{% endcapture %}
+{% capture text_welcome_visitor %}Welcome, {{ visitor.name }}!{% endcapture %}
+{% capture text_select_language %}Select your language{% endcapture %}
+
+<!--Search form-->
+{% capture text_keyword_placeholder %}Keyword, Job Title, skills{% endcapture %}
+{% capture text_location_placeholder %}Enter a Location{% endcapture %}
+{% capture text_radius %}Radius{% endcapture %}
+{% capture text_miles %}miles{% endcapture %}
+{% capture text_radius_length %}Radius Length{% endcapture %}
+{% capture text_find_jobs %}Find Jobs{% endcapture %}
+{% capture text_browse_opportunities %}Browse Opportunities{% endcapture %}
+
+
+<!--Talent Network / Internal Mobility-->
+{% capture text_talent_network_blurb %}<p class="heading-2">Ready to move your career to the next level?</p>{% endcapture %}
+{% capture text_join_our_talent_network %}Join our Talent Network{% endcapture %}
+{% capture text_talent_network_blurb_referral %}<p>Interested in working for BlackBear Communications?<br>Take the first step by taking our Talent Assessment today!</p>{% endcapture %}
+{% capture text_join_our_talent_network_referral %}Take our Talent Assessment{% endcapture %}
+
+<!--Footer-->
+{% capture text_footer_nav_1 %}
+<h2>Solutions</h2>
+<nav>
+    <ul class="clearfix">
+        <li><a href="https://www.telusdigital.com/solutions/cx-consulting?linkname=cx-consulting&linktype=footer" target="_blank">CX Strategy &amp; Transformation</a></li>
+        <li><a href="https://www.telusdigital.com/solutions/contact-center-outsourcing?linkname=contact-center-outsourcing&linktype=footer" target="_blank">Contact Center Outsourcing</a></li>
+        <li><a href="https://www.telusdigital.com/solutions/ai-customer-care?linkname=ai-customer-care&linktype=footer" target="_blank">Customer Care AI &amp; Technology</a></li>
+        <li><a href="https://www.telusdigital.com/solutions/data-for-ai-training?linkname=data-for-ai-training&linktype=footer" target="_blank">Data for AI Training</a></li>
+        <li><a href="https://www.telusdigital.com/solutions/enterprise-data-and-ai-transformation?linkname=enterprise-data-and-ai-transformation&linktype=footer" target="_blank">Enterprise Data &amp; AI Transformation</a></li>
+        <li><a href="https://www.telusdigital.com/solutions/digital-product-and-marketing?linkname=digital-product-and-marketing&linktype=footer" target="_blank">Digital Product &amp; Marketing</a></li>
+        <li><a href="https://www.telusdigital.com/solutions/enterprise-technology-modernization?linkname=enterprise-technology-modernization&linktype=footer" target="_blank">Enterprise Technology Modernization</a></li>
+        <li><a href="https://www.telusdigital.com/solutions/financial-crime-and-compliance?linkname=financial-crime-and-compliance&linktype=footer" target="_blank">Financial Crime &amp; Compliance</a></li>
+        <li><a href="https://www.telusdigital.com/solutions/platform-integrity-solutions?linkname=platform-integrity-solutions&linktype=footer" target="_blank">Platform Integrity</a></li>
+        <li><a href="https://www.fuelix.ai/" target="_blank">Fuel iX&trade;</a></li>
+    </ul>
+</nav>
+{% endcapture %}
+{% capture text_footer_nav_2 %}
+<h2>Industries</h2>
+<nav>
+    <ul class="clearfix">
+        <li><a href="https://www.telusdigital.com/industries/technology?linkname=technology&linktype=footer" target="_blank">Technology</a></li>
+        <li><a href="https://www.telusdigital.com/industries/communications-media?linkname=communications-media&linktype=footer" target="_blank">Communications &amp; Media</a></li>
+        <li><a href="https://www.telusdigital.com/industries/fintech-and-financial-services?linkname=fintech-and-financial-services&linktype=footer" target="_blank">Fintech &amp; Financial Services</a></li>
+        <li><a href="https://www.telusdigital.com/industries/travel-and-hospitality?linkname=travel-and-hospitality&linktype=footer" target="_blank">Travel &amp; Hospitality</a></li>
+        <li><a href="https://www.telusdigital.com/industries/games?linkname=games&linktype=footer" target="_blank">Games</a></li>
+        <li><a href="https://www.telusdigital.com/industries/retail-and-ecommerce?linkname=retail-and-ecommerce&linktype=footer" target="_blank">Retail &amp; Ecommerce</a></li>
+        <li><a href="https://www.telusdigital.com/industries/healthcare?linkname=healthcare&linktype=footer" target="_blank">Healthcare</a></li>
+        <li><a href="https://www.telusdigital.com/industries/automotive?linkname=automotive&linktype=footer" target="_blank">Automotive</a></li>
+    </ul>
+</nav>
+{% endcapture %}
+{% capture text_footer_nav_3 %}
+<h2>Company</h2>
+<nav>
+    <ul class="clearfix">
+        <li><a href="https://www.telusdigital.com/about?linkname=about-us&linktype=footer" target="_blank">About Us</a></li>
+        <li><a href="https://www.telusdigital.com/humanity-in-the-loop?linkname=humanity-in-the-loop&linktype=footer" target="_blank">Humanity-in-the-Loop</a></li>
+        <li><a href="https://www.telusdigital.com/technology-partners?linkname=technology-partners&linktype=footer" target="_blank">Technology Partners</a></li>
+        <li><a href="https://www.telusdigital.com/insights?linkname=insights&linktype=footer" target="_blank">Insights</a></li>
+        <li><a href="{{ root_url }}{{ current_locale.locale }}" target="_blank">Careers</a></li>
+        <li><a href="https://forms.clickup.com/3655202/f/3fhh2-7560/6K2PZSAGIBWVCOF1RB" target="_blank">Contact us</a></li>
+    </ul>
+</nav>
+{% endcapture %}
+{% capture text_subscribe_to_newsletter %}Subscribe to Newsletter{% endcapture %}
+{% capture text_footer_copyright_nav %}
+<a href="/{{ current_locale.locale }}/pages/cookies-preferences">Cookies preferences</a>
+<a href="https://submit-irm.trustarc.com/services/validation/7478848e-c349-4fb1-8f04-8d3d39c7ff3f?INTCMP=ti_contributors_link_excercise-your-privacy-rights">Do not sell my personal information</a>
+<a href="https://www.telusdigital.com/terms">Website user terms</a>
+<a href="https://www.telusdigital.com/privacy-policy">Privacy policy</a>
+<a href="https://www.telusdigital.com/modern-slavery-act">Modern slavery act transparency statement</a>
+{% endcapture %}
+{% capture text_footer_copyright %}TELUS International (Cda) Inc. and its subsidiaries use TELUS Digital for branding purposes.{% endcapture %}
+
+<!--Gamification-->
+{% capture text_employee_id %}Employee ID{% endcapture %}
+{% capture text_email %}Email{% endcapture %}
+{% capture text_total_referral_points %}Total Referral Points{% endcapture %}
+{% capture text_account_activation %}Account Activation{% endcapture %}
+{% capture text_account_login %}Account Login{% endcapture %}
+{% capture text_direct_referrals %}Direct Referrals{% endcapture %}
+{% capture text_general_referrals %}General Referrals{% endcapture %}
+{% capture text_social_job_referrals %}Social Job Referrals{% endcapture %}
+{% capture text_social_general_referrals %}Social General Referrals{% endcapture %}
+{% capture text_referral_link_clicks %}Referral Link Clicks{% endcapture %}
+{% capture text_social_link_clicks %}Social Link Clicks{% endcapture %}
+{% capture text_apply_started %}Apply Started{% endcapture %}
+{% capture text_status_applied %}Status: Applied{% endcapture %}
+{% capture text_status_in_process %}Status: In Process{% endcapture %}
+{% capture text_status_job_offer %}Status: Job Offer{% endcapture %}
+{% capture text_status_hired %}Status: Hired{% endcapture %}
+{% capture text_status_not_hired %}Status: Not Hired{% endcapture %}
+{% capture text_probation_complete %}Probation Complete{% endcapture %}
+{% capture text_acitivity_count %}Activity Count{% endcapture %}
+{% capture text_activity_points %}Activity Points{% endcapture %}
+
+<!--Job Search page-->
+{% capture text_search_results_heading %}
+{% if params['q'] != blank and params['location'] == blank %}
+    {{ jobs.total_entries }} {{ params['q'] | escape_html }} jobs found
+
+{% elsif params['q'] == blank and params['location'] != blank %}
+    {{ jobs.total_entries }} {{ params['location'] | escape_html }} jobs found
+
+{% elsif params['q'] != blank and params['location'] != blank %}
+    {{ jobs.total_entries }} {{ params['q'] | escape_html }} jobs in {{ params['location'] | escape_html }} found
+
+{% endif %}
+{% endcapture %}
+{% capture text_job_search_results %}Job Search Results{% endcapture %}
+
+{% if params['page'] == blank or params['page'] == 1 %}
+    {% capture n1 %}1{% endcapture %}
+    {% capture n2 %}{{ jobs.length }}{% endcapture %}
+
+{% else %}
+    {% if params['per_page'] == blank %}
+        {% capture tal_per_page %}25{% endcapture %}
+    {% else %}
+        {% capture tal_per_page %}{{ params['per_page'] }}{% endcapture %}
+    {% endif %}
+
+    {% capture tal_jobs_length %}{{ tal_per_page | minus: jobs.length }}{% endcapture %}
+
+    {% capture n1 %}{{ params['page'] | minus: 1 | times: tal_per_page | plus: 1 }}{% endcapture %}
+    {% capture n2 %}{{ tal_per_page | times: params['page'] | minus: tal_jobs_length }}{% endcapture %}
+{% endif %}
+{% capture text_showing %}Showing {{ n1 }}-{{ n2 }} of {{ jobs.total_entries }} results{% endcapture %}
+{% capture text_no_results_found %}<p>No jobs found matching your search. Please try again or <a href="javascript:void(0);" class="candidate-notification-link">set up a job alert</a>.</p>{% endcapture %}
+{% capture text_loading_jobs %}Loading jobs{% endcapture %}
+<!--Job Search page: Facets-->
+{% capture text_filter_your_results %}Filter Your Results{% endcapture %}
+{% capture text_clear_all %}Clear All{% endcapture %}
+{% capture text_category %}Category{% endcapture %}
+{% capture text_country %}Select a country{% endcapture %}
+{% capture text_language %}Select a language{% endcapture %}
+{% capture text_state %}State{% endcapture %}
+{% capture text_city %}City{% endcapture %}
+{% capture text_show_more %}Show more{% endcapture %}
+{% capture text_clear_filters %}Clear Filters{% endcapture %}
+{% capture text_close %}Close{% endcapture %}
+{% capture text_jobs %}jobs{% endcapture %}
+{% capture text_selected %}selected{% endcapture %}
+<!--Job Search page: Job Alerts-->
+{% capture text_set_up_job_alerts %}Set Up Job Alerts{% endcapture %}
+<!--Job Search page: Personalization-->
+{% capture text_frequent_job_searches %}Frequent Job Searches{% endcapture %}
+{% capture text_recent_job_searches %}Recent Job Searches{% endcapture %}
+{% capture text_recently_viewed_jobs %}Recently Viewed Jobs{% endcapture %}
+{% capture text_recommended_jobs %}Recommended Jobs{% endcapture %}
+{% capture text_personalize_your_experience %}Personalize your experience{% endcapture %}
+<!--Job Search page: Sortby-->
+{% capture text_sort_by %}Sort by{% endcapture %}
+{% capture text_relevance %}Relevance{% endcapture %}
+<!--Job Search: List headings-->
+{% capture text_job_title %}Job Title{% endcapture %}
+{% capture text_location %}Location{% endcapture %}
+{% capture text_date_posted %}Date Posted{% endcapture %}
+{% capture text_new %}NEW{% endcapture %}
+{% capture text_view_more_jobs %}View more jobs{% endcapture %}
+<!--Job Search page: Referral Incentives-->
+{% capture text_incentive %}Incentive{% endcapture %}
+{% capture text_none %}None{% endcapture %}
+<!--Job Search page: pagination-->
+{% capture text_previous %}previous{% endcapture %}
+{% capture text_next %}next{% endcapture %}
+<!--Job Search page: months-->
+{% capture text_january %}Jan{% endcapture %}
+{% capture text_february %}Feb{% endcapture %}
+{% capture text_march %}Mar{% endcapture %}
+{% capture text_april %}Apr{% endcapture %}
+{% capture text_may %}May{% endcapture %}
+{% capture text_june %}Jun{% endcapture %}
+{% capture text_july %}Jul{% endcapture %}
+{% capture text_august %}Aug{% endcapture %}
+{% capture text_september %}Sep{% endcapture %}
+{% capture text_october %}Oct{% endcapture %}
+{% capture text_november %}Nov{% endcapture %}
+{% capture text_december %}Dec{% endcapture %}
+
+<!--Job Details page-->
+{% capture text_back_to_search_results %}Back to previous page{% endcapture %}
+{% capture text_previous_opportunity %}Previous Opportunity{% endcapture %}
+{% capture text_next_opportunity %}Next Opportunity{% endcapture %}
+{% capture text_inactive_job %}<p>This job posting is no longer active.</p>{% endcapture %}
+{% capture text_inactive_referral_job %}<p>This job posting you were looking for is no longer active. Please search for other jobs instead.</p>{% endcapture %}
+{% capture text_loading_job %}Loading job{% endcapture %}
+<!--Job Details page: social share-->
+{% capture text_share %}Share{% endcapture %}
+{% capture text_copy %}Copy{% endcapture %}
+{% capture text_copied %}Copied!{% endcapture %}
+<!--Job Details page: Save Job functionality-->
+{% capture text_save_job %}Save Job{% endcapture %}
+{% capture text_saved %}Saved{% endcapture %}
+{% capture text_job_has_been_saved %}Job has been saved!{% endcapture %}
+{% capture text_job_has_been_removed %}Job has been removed.{% endcapture %}
+<!--Job Details page: Apply / Refer buttons-->
+{% capture text_apply_now %}Apply for this job{% endcapture %}
+{% capture text_submit_candidate %}Submit Candidate{% endcapture %}
+{% capture text_refer_a_friend %}Refer a Friend{% endcapture %}
+{% capture text_refer_a_coworker %}Refer a Co-Worker{% endcapture %}
+{% capture text_referral_reward %}Referral Reward{% endcapture %}
+<!--Job Details page: Similar Jobs-->
+{% capture text_similar_jobs %}Similar Jobs{% endcapture %}
+{% capture text_view_more %}View More{% endcapture %}

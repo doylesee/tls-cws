@@ -1,0 +1,126 @@
+{% capture custom_layout_collection %}BANNER,2-COLUMN CTA,2-COLUMN MEDIA RIGHT,ACCORDION,BRANDED COPY,CAROUSEL,CATEGORY TILES,IMAGE GALLERY,HIRING PROCESS,TESTIMONIAL VIDEOS,TESTIMONIALS{% endcapture %}
+{% assign background_counter = 18 %}
+
+{% capture page_object_content %}{{ page_object_content | replace_global_regex: '\r?\n|\r','' }}{% endcapture %}
+{% capture page_section_content %}{% endcapture %}
+
+{% comment %}Output page content depending on the section layouts{% endcomment %}
+{{ custom_layout_collection | split: ',' | assign_to: 'custom_layouts' }}
+{% for custom_layout in custom_layouts %}
+    {% capture custom_layout_start_with_pre %}<pre>SECTION {{ custom_layout }} START{% endcapture %}
+    {% capture custom_layout_start_with_pre_dash %}---<pre>SECTION {{ custom_layout }} START{% endcapture %}
+    {% capture custom_layout_end_with_pre %}<pre>SECTION {{ custom_layout }} END</pre>{% endcapture %}
+    {% capture custom_layout_end_with_pre_dash %}<pre>SECTION {{ custom_layout }} END</pre>---{% endcapture %}
+
+    {% capture page_object_content %}{{ page_object_content | replace: custom_layout_start_with_pre,custom_layout_start_with_pre_dash | replace: custom_layout_end_with_pre,custom_layout_end_with_pre_dash }}{% endcapture %}
+{% endfor %}
+{% assign page_section_content_array = page_object_content | split: '---' | assign_to: 'page_sections' %}
+
+{% assign section_counter = 0 %}
+{% for page_section in page_sections %}
+    {% if page_section != blank %}
+        {% assign step_counter = step_counter | plus: 1 %}
+        {% capture page_section_trunc %}{{ page_section | truncatewords: 10 }}{% endcapture %}{% comment %}for easy debugging{% endcomment %}
+        {% capture page_section_background %}{% endcapture %}
+        {% capture custom_layout_content_block_name %}{% endcapture %}
+        {% capture custom_layout_start %}{% endcapture %}
+        {% capture custom_layout_start_w_bg %}{% endcapture %}
+        {% capture custom_layout_end %}{% endcapture %}
+
+        {{ custom_layout_collection | split: ',' | assign_to: 'custom_layouts' }}
+
+        {% for custom_layout in custom_layouts %}
+            {% capture custom_layout_name %}layout-{{ custom_layout | remove: ' START' | downcase | replace: ' ','-' }}{% endcapture %}
+
+            {% comment %}checking if page section has a custom layout + capturing page section content without the PRE tags{% endcomment %}
+            {% capture custom_layout_start %}SECTION {{ custom_layout }} START{% endcapture %}
+            {% capture custom_layout_end %}SECTION {{ custom_layout }} END{% endcapture %}
+            {% capture custom_layout_start_pre %}<pre>{{ custom_layout_start }}</pre>{% endcapture %}
+            {% capture custom_layout_end_pre %}<pre>{{ custom_layout_end }}</pre>{% endcapture %}
+
+            {% if page_section contains custom_layout_start %}
+                {% capture custom_layout_content_block_name %}/{{ custom_layout_name }}{% endcapture %}
+
+                {% comment %}checking if page section has a set background, if it does, then capture that value in page_section_background variable{% endcomment %}
+
+                {% if page_section contains 'background-' %}
+                    {% for i in (1..background_counter) %}
+                        {% capture background_class %}background-{{ forloop.index }}{% endcapture %}
+                        {% if page_section contains background_class %}
+                            {% capture custom_layout_start_pre_w_bg_test %}<pre>{{ custom_layout_start }} {{ background_class }}</pre>{% endcapture %}
+
+                            {% if page_section contains custom_layout_start_pre_w_bg_test %}
+                                {% capture custom_layout_start_pre_w_bg %}<pre>{{ custom_layout_start }} {{ background_class }}</pre>{% endcapture %}
+                                {% capture page_section_background %}{{ background_class }}{% endcapture %}
+
+                                {% break %}
+                            {% else %}
+                                {% capture custom_layout_start_pre_w_bg %}{% endcapture %}
+                                {% capture page_section_background %}{% endcapture %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% capture page_section_content %}{{ page_section | remove: custom_layout_start_pre | remove: custom_layout_start_pre_w_bg | remove: custom_layout_end_pre }}{% endcapture %}
+
+                {% break %}
+
+            {% endif %}
+        {% endfor %}
+
+        {% if step_counter > 2 %}
+            {% capture page_section_content %}{{ page_section_content | replace: 'src=','loading="lazy" src=' }}{% endcapture %}
+        {% endif %}
+
+        {% capture section_has_dark_background %}false{% endcapture %}
+        {% assign dark_backgrounds = ',background-1,background-2,background-6,background-7,background-11,background-13,background-15,background-16,' %}
+        {% assign check_bg = page_section_background | prepend: ',' | append: ',' %}
+        {% if dark_backgrounds contains check_bg %}
+          {% capture section_has_dark_background %}true{% endcapture %}
+        {% endif %}
+
+        {% if custom_layout_content_block_name != blank %}
+            {% if custom_layout_name == 'layout-banner' or custom_layout_name == 'layout-2-column-media-right' %}
+                {% capture is_padded %}false{% endcapture %}
+            {% else %}
+                {% capture is_padded %}true{% endcapture %}
+            {% endif %}
+        {% endif %}
+
+        {% if custom_layout_content_block_name == blank and page_section != blank %}
+            {% capture is_spaced %}true{% endcapture %}
+        {% else %}
+            {% capture is_spaced %}false{% endcapture %}
+        {% endif %}
+        
+        {% comment %}outputting the page section content{% endcomment %}
+        <section class="page-section{% if custom_layout_content_block_name != blank %} {{ custom_layout_content_block_name | remove_first: '/' }}{% endif %}{% if is_padded == 'true' or prev_is_padded == 'false' %} padded-v-xlarge{% endif %}{% if page_section_background != blank %} {{ page_section_background }}{% endif %}{% if section_has_dark_background == 'true' %} background-dark{% endif %}">
+
+            {% if custom_layout_content_block_name != blank %}
+                {% comment %}content block include for the layout{% endcomment %}
+                {% include custom_layout_content_block_name %}
+
+            {% elsif page_section != blank %}
+                {% comment %}just regular page section content{% endcomment %}
+                <div class="branded-copy">
+                    <div class="row">
+                        <div class="column large-8 end">
+                            <div class="background-white-opaque---">{{ page_section | replace: 'src=','loading="lazy" src=' }}</div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endif %}
+
+            {% if is_spaced == 'true' or prev_is_padded == 'true' %}<div class="padded-v-large"></div>{% endif %}
+        </section>
+
+        {% if custom_layout_content_block_name != blank %}
+            {% if custom_layout_name == 'layout-banner' or custom_layout_name == 'layout-2-column-media-right' or page_section_background != blank %}
+                {% capture prev_is_padded %}false{% endcapture %}
+            {% else %}
+                {% capture prev_is_padded %}true{% endcapture %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endfor %}

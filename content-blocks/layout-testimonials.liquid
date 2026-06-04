@@ -1,0 +1,76 @@
+{% capture page_content_formatted %}{{ page_section_content | replace_global_regex: '\n|\r','' | replace: '<pre>ITEM ENDITEM START</pre>','</div>------<div class="item">' | replace: '<pre>ITEM START</pre>','---<div class="item">' | replace: '<pre>ITEM END</pre>','</div>---' }}{% endcapture %}
+{% assign page_content_array = page_content_formatted | split: '---' | assign_to: 'page_elements' %}
+
+{% capture column_contents %}{% endcapture %}
+{% assign row_index = 0 %}
+{% capture row_index_close_tags %}
+		</div><!--close .testimonials-->
+	</div>
+</div>
+{% endcapture %}
+
+{% for page_element in page_elements %}
+	{% if page_element contains '<div class="item">' %}
+		{% capture column_contents %}
+		{{ column_contents }}
+
+		{% if row_index == 0 %}
+			{% assign row_index = 1 %}
+			<div class="row">
+		        <div class="column">
+		            <div class="testimonials ">
+		{% endif %}
+
+		{% if cb_is_job_search != 'true' %}
+			{% capture page_element_content_formatted %}{{ page_element | replace: '<p>','---' | replace: '</p>','---' }}{% endcapture %}
+	        {% assign page_element_content_array = page_element_content_formatted | split: '---' | assign_to: 'page_element_attr' %}
+
+	        {% assign item_name = page_element_attr[1] | strip %}
+	        {% capture item_name_wp %}<p>{{ item_name }}</p>{% endcapture %}
+
+	        {{ item_name | split: ',' | assign_to: 'item_name_attrs' }}
+	        {% assign item_name_full = item_name_attrs[0] %}
+	        {% assign item_name_position = item_name_attrs[1] %}
+	        {% assign names = item_name_full | split: ' ' %}
+	    {% endif %}
+
+        <div class="testimonials__item background-12 padded-h-medium padded-v-large">
+            <div class="padded-h-xsmall padded-v-medium">
+                {{ page_element | remove: item_name_wp }}
+
+                {% if cb_is_job_search != 'true' %}
+                <div class="paragraph-4">
+                    <span class="testimonials__item-initials background-18">{% for name in names %}{{ name | slice: 0 }}{% endfor %}</span>
+                    <span class="testimonials__item-name">{{ item_name_full }}<br />{{ item_name_position }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+		{% endcapture %}
+
+	{% elsif page_element != '' %}
+		{% capture column_contents %}
+		{{ column_contents }}
+
+		{% if row_index == 1 %}
+			{% assign row_index = 0 %}
+			{{ row_index_close_tags }}
+		{% endif %}
+		
+		<div class="row">
+	        <div class="column large-6 end">
+	            {{ page_element }}
+	        </div>
+	    </div>
+		{% endcapture %}
+	{% endif %}
+{% endfor %}
+
+{% capture column_contents %}
+{{ column_contents }}
+{% if row_index == 1 %}
+	{{ row_index_close_tags }}
+{% endif %}
+{% endcapture %}
+
+{{ column_contents }}

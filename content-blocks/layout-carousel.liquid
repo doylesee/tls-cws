@@ -1,0 +1,99 @@
+{% capture page_content_formatted %}{{ page_section_content | replace_global_regex: '\n|\r','' | replace: '<pre>ITEM ENDITEM START</pre>','</div>------<div class="item">' | replace: '<pre>ITEM START</pre>','---<div class="item">' | replace: '<pre>ITEM END</pre>','</div>---' }}{% endcapture %}
+{% assign page_content_array = page_content_formatted | split: '---' | assign_to: 'page_elements' %}
+
+{% capture column_contents %}{% endcapture %}
+{% assign row_index = 0 %}
+{% capture row_index_close_tags %}
+        </div><!--close .benefits-->
+    </div>
+</div>
+{% endcapture %}
+
+{% for page_element in page_elements %}
+	{% if page_element contains '<div class="item">' %}
+		{% capture column_contents %}
+		{{ column_contents }}
+
+		{% if row_index == 0 %}
+			{% assign row_index = 1 %}
+			<div class="row">
+		        <div class="column large-10 large-offset-1 end">
+		            <div class="benefits">
+		{% endif %}
+
+		{% capture page_element_content_formatted %}{{ page_element | replace: '<p>','---' | replace: '</p>','---' }}{% endcapture %}
+        {% assign page_element_content_array = page_element_content_formatted | split: '---' | assign_to: 'page_element_attr' %}
+        {% assign item_image = page_element_attr[1] | strip %}
+        {% assign item_tags = page_element_attr[3] | strip %}
+
+        {% capture item_image_wp %}<p>{{ item_image }}</p>{% endcapture %}
+        {% capture item_tags_wp %}<p>{{ item_tags }}</p>{% endcapture %}
+
+        <div class="benefits__item background-15">
+            <div class="row">
+                <div class="columns large-6">
+                    <div class="padded-large">
+                        {{ page_element | remove: item_image_wp | remove: item_tags_wp }}
+                        <div class="benefits__item-tag">
+                        	<span>{{ item_tags | replace: ',','</span><span>' }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns large-6">
+                    <div class="benefits__item-media">
+                        <div class="benefits__item-media-bg">
+                            <svg width="0" height="0" style="position:absolute;">
+                                <defs>
+                                    <clipPath id="gradient-curve-clip" clipPathUnits="objectBoundingBox">
+                                        <path d="M 1 1 L 1 0 L 0.3331 0.1587 Q 0.0206 0.2513 0 0.4693 L 0 1 Z" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <div class="clipped-gradient"></div>
+                        </div>
+
+                        <div class="benefits__item-media-img">
+                            <svg width="0" height="0" style="position:absolute;">
+                                <defs>
+                                    <clipPath id="fluid-curve-clip" clipPathUnits="objectBoundingBox">
+                                        <path d="M 1 1 L 1 0.0667 L 0.3668 0.2148 Q 0.07 0.3013 0.0505 0.5046 L 0.0505 1 Z" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <div class="clipped-media">
+                                {{ item_image }}
+                            </div>  
+                        </div>                      
+                    </div>
+                </div>
+            </div>
+        </div><!--close .benefits__item-->
+
+		{% endcapture %}
+
+	{% elsif page_element != '' %}
+		{% capture column_contents %}
+		{{ column_contents }}
+
+		{% if row_index == 1 %}
+			{% assign row_index = 0 %}
+			{{ row_index_close_tags }}
+		{% endif %}
+		
+		<div class="row">
+	        <div class="column large-6 end">
+	            {{ page_element }}
+	        </div>
+	    </div>
+		{% endcapture %}
+	{% endif %}
+{% endfor %}
+
+{% capture column_contents %}
+{{ column_contents }}
+{% if row_index == 1 %}
+    {{ row_index_close_tags }}
+{% endif %}
+{% endcapture %}
+
+{{ column_contents }}

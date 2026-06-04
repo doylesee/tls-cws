@@ -1,0 +1,313 @@
+<script>
+console.log('external_id: {{ job.external_id }}');
+console.log('ExternalATSURL: {{ job.cfdisplay_ExternalATSURL }}');
+console.log('publish_to_internal_career_site / show apply: {{ job.cfdisplay_publish_to_internal_career_site }}');
+console.log('ExternalATSURL: {{ job.cfdisplay_ExternalATSURL }}');
+</script>
+
+{% unless root_url contains 'preview' or root_url contains 'internal' or root_url contains 'agency' %}
+    {% if job.active? and cb_is_referral_page != 'true' %}
+        <script type="application/ld+json">
+            {
+                "@context" : "http://schema.org/",
+                "@type" : "JobPosting",
+                "title" : "{{ job.title | escape_javascript }}",
+                "description" : "{{ job.description | escape_javascript | replace: "\'","'" | replace: "\$","$" }}",
+                "identifier": {
+                    "@type": "PropertyValue",
+                    "name": "{{ cb_company_name }}",
+                    "value": "{{ job.cfdisplay_JobdisplayID }}"
+                },
+                "hiringOrganization" : {
+                    "@type" : "Organization",
+                    "name" : "{{ cb_company_name }}",
+                    "logo" : "{{ root_url }}system/production/assets/515308/original/telus__icon.png"
+                },
+                "jobLocation" : {
+                    "@type" : "Place",
+                    "address" : {
+                        "@type" : "PostalAddress",
+                        "streetAddress" : "{{ job.location.street | escape_javascript }}",
+                        "addressLocality" : "{{ job.location.city | escape_javascript }}",
+                        "addressRegion" : "{{ job.location.state_prov | escape_javascript }}",
+                        "postalCode" : "{{ job.location.postal_code | escape_javascript }}",
+                        "addressCountry": "{{ job.location.country | escape_javascript }}"
+                    }
+                },
+                {% if job.cfdisplay_workstyle == 'Remote' %}"jobLocationType": "TELECOMMUTE",{% endif %}
+                "datePosted" : "{{ job.updated_at | date: "%Y-%m-%d" }}",
+                "directApply": true
+            }
+        </script>
+    {% endif %}
+{% endunless %}
+
+{% if cb_is_internal_job_details == 'false' %}
+    {% unless job.active? %}
+        {% redirect_temporary '/search/jobs?ns_inactive_job=1' %}
+    {% endunless %}
+{% endif %}
+
+{% comment %}Job Details page: Show / hide Apply button{% endcomment %}
+{% if job.active? and cb_site_type == 'external' %}
+    {% capture show_apply_button %}true{% endcapture %}
+
+{% elsif job.active? and cb_site_type == 'internal' %}
+    {% if job.cfdisplay_publish_to_internal_career_site == 'Yes' %}
+        {% capture show_apply_button %}true{% endcapture %}
+    {% endif %}
+
+    {% comment %}
+    2026-March-24, Karla Hurtado:
+    Supress the Internal Careers until May 1st. The idea will be that once you click over the "Apply Now" button in the Internal Careers category in the home page, to be redirected to a page that says that it is under development and it will be live starting May 1st.
+    {% endcomment %}
+    {% capture show_apply_button %}false{% endcapture %}
+
+{% endif %}
+
+{% if show_apply_button == 'true' %}
+<div id="apply-top" class="js hide">
+    {% if agency %}
+        {{ job | link_to_apply:text_submit_candidate, agency }}
+    {% else %}
+        {% if job.cfdisplay_ExternalATSURL != blank %}
+            {% comment %}
+            As per customer request / DavidF 2/12 - From Karla:
+            AI Community teams use their own separate CRM and leverage Jobvite only to publish their roles on the career site.
+            As a result, when candidates click “Apply Now” on AI Community job postings, they should be redirected to the URL manually added in the “External ATS URL” field within the corresponding Job Requisition, rather than entering our apply workflow.
+            That said, we are currently in discussions with the AI Community team about potentially transitioning them to Jobvite in the future. With that in mind, we need both behaviors supported:
+            •   If the External ATS URL field is populated → redirect candidates externally
+            •   If the field is empty → route candidates through the Jobvite apply workflow
+            Ideally, this functionality should be available across all job categories, as ownership of categories (LOBs) and supporting systems can change while the career site remains shared.
+            {% endcomment %}
+            <a href="{{ job.cfdisplay_ExternalATSURL }}" target="_blank">{{ text_apply_button }}</a>
+        {% else %}
+            {{ job | link_to_apply:text_apply_button }}
+        {% endif %}
+    {% endif %}
+</div>
+{% endif %}
+
+
+{% comment %}Karla Hurtado via UAT: The original requirements to only show this button when the custom job field ‘Publish to Referral Portal’ equals “Yes” and ‘Posting Type’ = External" is wrong and needs to be modified to "Only show this button when the custom job field ‘Publish to Referral Portal’ equals “Yes” and the custom job field ‘Publish to External Career Site’ equals “Yes”.{% endcomment %}
+{% if job.active? and cb_is_internal_job_details == 'true' and job.cfdisplay_publish_to_referral_portal == 'Yes' and job.cfdisplay_publish_to_external_career_site == 'Yes' %}
+    {% capture eu_workflow_countries %}Armenia;Austria;Bosnia and Herzegovina;Bulgaria;Czech Republic;Denmark;Finland;France;Germany;Ireland;Italy;Latvia;Netherlands;Norway;Poland;Portugal;Romania;Slovakia;Spain;Sweden;Switzerland;Turkey;Ukraine;United Kingdom{% endcapture %}
+    {% assign eu_workflow_countries_array = eu_workflow_countries | split: ';' %}
+
+    {% capture non_eu_workflow_countries %}Argentina;Australia;Barbados;Brazil;Canada;China;Colombia;Costa Rica;Dominican Republic;Egypt;El Salvador;Guatemala;Hongkong;India;Indonesia;Japan;Mexico;Morocco;Paraguay;Philippines;Singapore;South Africa;South Korea;Taiwan;United States of America;Uruguay;Vietnam{% endcapture %}
+    {% assign non_eu_workflow_countries_array = non_eu_workflow_countries | split: ';' %}
+
+    {% if eu_workflow_countries_array contains job.location.country or non_eu_workflow_countries_array contains job.location.country %}
+        {% comment %}Requirements provided were to strictly have Referral functionality for jobs that fall under those list{% endcomment %}
+        {% capture show_refer_button %}true{% endcapture %}
+    {% endif %}
+{% endif %}
+
+{% if show_refer_button == 'true' %}
+<div id="refer-top" class="js hide {% if eu_workflow_countries_array contains job.location.country %}js-eu-job{% elsif non_eu_workflow_countries_array contains job.location.country %}js-non-eu-job{% endif %}">
+    {% if eu_workflow_countries_array contains job.location.country %}
+        {% comment %}Pop up the 'Referral EU' workflow (aka regular Referral process) when the job is in EU countries list (see eu_workflow_countries above){% endcomment %}
+        {{ job | link_to_referral: 'Refer a Friend' }}
+
+    {% elsif non_eu_workflow_countries_array contains job.location.country %}
+        {% comment %}
+        Non-EU Referral pt. 1/3
+        Job Details page / Non-EU jobs (see non_eu_workflow_countries above), simply redirect to the corresponding job referral URL
+        {% endcomment %}
+        {{ 'Refer a Friend' | link_to_launcher, label: 'referral-non-eu', job: job }}
+
+    {% endif %}
+</div>
+{% endif %}
+
+<div id="header-wrapper-fixed-bottom"></div>
+
+<div id="job-details">
+    <div class="job-details-preloader-js preloader preloader--job">
+        <div class="facet-job-loading hide-for-print" role="alert" aria-labelledby="facet-job-loading">
+            <div class="show-for-sr"><label id="facet-jobs-loading">{{ text_loading_job }}</label></div>
+        </div>
+    </div>
+
+    {% comment %}Capture Banner-specific content from the page object's .content{% endcomment %}
+    <div class="job-details-inner-js">
+        <div class="job-details-banner">
+            <div class="job-details-banner__image">
+                {{ 'job-details-page-banner' | pages_with_tag | assign_to: 'job_details_page_banner' }}
+                {% if job_details_page_banner[0].images.size > 0 %}
+                <img src="{{ job_details_page_banner[0].images[0].url }}" alt="{% if job_details_page_banner[0].images[0].title != job_details_page_banner[0].images[0].file_name %}{{ job_details_page_banner[0].images[0].title | html_safe }}{% endif %}" class="full-width" />
+                {% endif %}
+            </div>
+            <div class="job-details-banner__copy">
+                <div class="row row--wider">
+                    <div class="column large-8 end">
+                        <div class="job-details-banner__copy-inner background-10 padded-large">
+                            <div class="padded-h-small">
+                                <h1 class="heading-2">
+                                    <strong>
+                                    {% if cb_site_type == 'external' %}
+                                        {{ job.title | html_safe }}
+
+                                    {% elsif cb_site_type == 'internal' %}
+                                        {{ job.cfdisplay_BusinessTitle | html_safe }}
+
+                                    {% endif %}
+                                    </strong>
+                                </h1>
+
+                                <div class="row">
+                                    {% if cb_site_type == 'external' %}
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>{{ text_label_ref_number }}:</strong> {{ job.cfdisplay_JobdisplayID }}</div>
+                                        </div>
+
+                                        {% if job.cfdisplay_Category != blank %}
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>{{ text_label_category }}:</strong> {{ job.cfdisplay_Category }}</div>
+                                        </div>
+                                        {% endif %}
+
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>{{ text_label_primary_location }}:</strong> {{ job.location.city }}</div>
+                                        </div>
+
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>{{ text_label_country }}:</strong> {{ job.location.country }}</div>
+                                        </div>
+
+                                        {% if job.cfdisplay_workstyle != blank %}
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>{{ text_label_work_style }}:</strong> {{ job.cfdisplay_workstyle }}</div>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if job.cfdisplay_salary_range != blank %}
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>{{ text_label_salary_range }}:</strong> {{ job.cfdisplay_salary_range }}</div>
+                                        </div>
+                                        {% endif %}
+
+                                    {% elsif cb_site_type == 'internal' %}
+                                        {% if job.cfdisplay_publish_to_internal_career_site == 'Yes' or job.cfdisplay_publish_to_referral_portal == 'Yes' %}
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>Ref. Number:</strong> {{ job.cfdisplay_JobdisplayID }}</div>
+                                        </div>
+                                        {% endif %}
+
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>Location:</strong> {{ job.location.city }}</div>
+                                        </div>
+
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>Country:</strong> {{ job.location.country }}</div>
+                                        </div>
+
+                                        {% if job.cfdisplay_publish_to_internal_career_site == 'Yes' or job.cfdisplay_publish_to_referral_portal == 'Yes' %}
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>Date Posted:</strong> {{ job.updated_at | date: '%Y-%m-%d' }}</div>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if job.cfdisplay_CloseDate != blank and job.cfdisplay_publish_to_internal_career_site == 'Yes' %}
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>Last Day to apply:</strong> {{ job.cfdisplay_CloseDate }}</div>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if job.cfdisplay_PositionTimeType != blank and job.cfdisplay_publish_to_internal_career_site == 'Yes' %}
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>Time Type:</strong> {{ job.cfdisplay_PositionTimeType }}</div>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if job.cfdisplay_JobType != blank and job.cfdisplay_publish_to_internal_career_site == 'Yes' %}
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>Job Type:</strong> {{ job.cfdisplay_JobType }}</div>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if job.cfdisplay_Primary_Language != blank %}
+                                        {% if job.cfdisplay_publish_to_referral_portal == 'Yes' or job.cfdisplay_publish_to_referrals_hot_hob == 'Yes' %}
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>Language:</strong> {{ job.cfdisplay_Primary_Language }}</div>
+                                        </div>
+                                        {% endif %}
+                                        {% endif %}
+
+                                        {% if job.cfdisplay_Secondary_Language != blank %}
+                                        {% if job.cfdisplay_publish_to_referral_portal == 'Yes' or job.cfdisplay_publish_to_referrals_hot_hob == 'Yes' %}
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>Language:</strong> {{ job.cfdisplay_Secondary_Language }}</div>
+                                        </div>
+                                        {% endif %}
+                                        {% endif %}
+
+                                        <script>
+                                            console.log('job.referral_incentive_amount: {{ job.referral_incentive_amount }}');
+                                            console.log('job.cfdisplay_publish_to_referral_portal: {{ job.cfdisplay_publish_to_referral_portal }}');
+                                            console.log('job.cfdisplay_publish_to_referrals_hot_hob: {{ job.cfdisplay_publish_to_referrals_hot_hob }}');
+                                        </script>
+                                        {% if job.referral_incentive_amount != blank %}
+                                        {% if job.cfdisplay_publish_to_referral_portal == 'Yes' or job.cfdisplay_publish_to_referrals_hot_hob == 'Yes' %}
+                                        <div class="columns medium-6">
+                                            <div class="space-small"><strong>Referral Bonus:</strong> {% if job.referral_incentive_currency == 'USD' or job.referral_incentive_currency == 'CAD' %}${% elsif job.referral_incentive_currency == 'EUR' %}€{% elsif job.referral_incentive_currency == 'GBP' %}£{% endif %}{{ job.referral_incentive_amount }} ({{ job.referral_incentive_currency }})</div>
+                                        </div>
+                                        {% endif %}
+                                        {% endif %}
+
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="job-details-description body-wrapper padded-v-large">
+            <div class="row row--wider">
+                <div class="js-job-details__sidebar columns medium-10 medium-offset-1 end large-4 large-offset-0 large-push-8">
+                    <aside class="js-job-details__sidebar-posted background-white-opaque padded-large space-medium">
+                        {{ text_sidebar_copy_1 }}
+
+                        {% if show_apply_button == 'true' %}
+                            <button class="apply-bottom js branded-button-1">{{ text_apply_button }}</button>
+                        {% endif %}
+
+                        {% if show_refer_button == 'true' %}
+                            {% if show_apply_button == 'true' %}&nbsp;{% endif %}
+                            <button class="refer-bottom js branded-button-1">Refer a Friend</button>
+                        {% endif %}
+                    </aside>
+                </div><!--close .js-job-details__sidebar-->
+                <div class="js-job-details__main columns medium-10 medium-offset-1 end large-7 large-offset-0 large-pull-4">
+                    <section>
+                        <div class="padded-v-medium space-medium">
+                            {% unless job.active? %}
+                            <div class="space-large">{{ text_inactive_job }}</div>
+                            {% endunless %}
+
+                            <div class="job-description space-xlarge">
+                                {{ job.description }}
+                            </div>
+
+                            <div class="space-small">
+                                {% if show_apply_button == 'true' %}
+                                    <button class="apply-bottom js branded-button-1">{{ text_apply_button }}</button>
+                                {% endif %}
+                                {% if show_refer_button == 'true' %}
+                                    {% if show_apply_button == 'true' %}&nbsp;{% endif %}
+                                    <button class="refer-bottom js branded-button-1">Refer a Friend</button>
+                                {% endif %}
+                            </div>
+                            <p><a href="/{{ current_locale.locale }}/search/jobs" class="js branded-button-3" id="back-to-search" rel="nofollow">{{ text_back_to_search_results }}</a></p>
+                        </div>
+                    </section>
+                </div><!--close .js-job-details__main-->
+            </div>
+        </div>
+    </div><!--close .job-details-inner-js-->
+
+</div><!--close #job-details-->
+
+<script>loadjob();</script>

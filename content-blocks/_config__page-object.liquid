@@ -1,0 +1,48 @@
+{% comment %}
+No need to add an include _config__variables, as all templates should already include that
+Any variables declared on there can be used here
+{% endcomment %}
+
+{% comment %}Capture the initial/EN-locale page object{% endcomment %}
+{% if cb_is_home_page == 'true' %}
+    {{ 'careers-home' | pages_with_tag | assign_to: 'careers_home' }}
+    {% assign page_object = careers_home[0] %}
+
+{% elsif params['ns_category'] != blank %}
+    {% capture cb_jobs_category_content_tag %}{{ params['ns_category'] }}-jobs-content{% endcapture %}
+    {{ cb_jobs_category_content_tag | pages_with_tag | assign_to: 'jobs_category_content' }}
+
+    {% if jobs_category_content.size > 0 %}
+        {% assign page_object = jobs_category_content[0] %}
+    {% endif %}
+
+    {% comment %}Capture Job Category param/s{% endcomment %}
+    {% capture page_content_formatted %}{{ page_object.content | replace: '<p>','---' | replace: '</p>','---' }}{% endcapture %}
+    {% assign page_content_array = page_content_formatted | split: '---' | assign_to: 'page_element_attr' %}
+    {% assign job_category_params = page_element_attr[1] | strip %}
+    {% capture job_category_params_wp %}<p>{{ job_category_params }}</p>{% endcapture %}
+
+{% elsif cb_is_job_search == 'true' %}
+    {{ 'all-jobs' | pages_with_tag | assign_to: 'all_jobs' }}
+    {% assign page_object = all_jobs[0] %}
+
+{% elsif page %}
+    {% assign page_object = page %}
+
+{% endif %}
+
+{% comment %}Capture non-English locale page_object{% endcomment %}
+{% if current_locale.locale != 'en' and page_object %}
+    {% capture page_object_locale_tag %}{{ current_locale.locale }}-{{ page_object.permalink }}{% endcapture %}
+
+    {{ page_object_locale_tag | pages_with_tag | assign_to: 'page_object_locale' }}
+    
+    {% if page_object_locale.size > 0 %}
+        {% assign page_object = page_object_locale[0] %}
+    {% endif %}
+{% endif %}
+
+{% comment %}Check if page_object has a banner section{% endcomment %}
+{% if page_object.content contains 'SECTION BANNER START' and page_object.content contains 'SECTION BANNER END' %}
+    {% capture page_object_has_banner %}true{% endcapture %}
+{% endif %}

@@ -1,0 +1,52 @@
+{% capture page_content_formatted %}{{ page_section_content | replace_global_regex: '\n|\r','' | replace: '<pre>ITEM ENDITEM START</pre>','</div>------<div class="item">' | replace: '<pre>ITEM START</pre>','---<div class="item">' | replace: '<pre>ITEM END</pre>','</div>---' }}{% endcapture %}
+{% assign page_content_array = page_content_formatted | split: '---' | assign_to: 'page_elements' %}
+
+{% capture column_contents %}{% endcapture %}
+{% assign row_index = 0 %}
+{% capture row_index_close_tags %}
+</div><!--close .row-->
+{% endcapture %}
+
+{% for page_element in page_elements %}
+	{% if page_element contains '<div class="item">' %}
+		{% capture column_contents %}
+		{{ column_contents }}
+
+		{% if row_index == 0 %}
+			{% assign row_index = 1 %}
+			<div class="row two-column-cta__items">
+		{% endif %}
+
+        <div class="columns medium-6 end two-column-cta__item-outer">
+        	<div class="two-column-cta__item padded-large">
+				{{ page_element }}
+			</div>
+        </div>
+		{% endcapture %}
+
+	{% elsif page_element != '' %}
+		{% capture column_contents %}
+		{{ column_contents }}
+
+		{% if row_index == 1 %}
+			{% assign row_index = 0 %}
+			{{ row_index_close_tags }}
+		{% endif %}
+		
+		<div class="row">
+	        <div class="column large-6 end">
+	            {{ page_element }}
+	        </div>
+	    </div>
+		{% endcapture %}
+	{% endif %}
+{% endfor %}
+
+{% capture column_contents %}
+{{ column_contents }}
+{% if row_index == 1 %}
+	{{ row_index_close_tags }}
+{% endif %}
+{% endcapture %}
+
+{{ column_contents }}
