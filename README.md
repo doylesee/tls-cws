@@ -16,7 +16,8 @@ The client required a highly complex, custom career portal based on high-fidelit
 A project originally scoped and quoted for a 7-week delivery window was heavily accelerated by the client, demanding full execution in just 2 weeks.
 
 <strong>CMS Technical Limitations</strong><br />
-The CMS backend architecture was highly restrictive, offering content administrators nothing more than a primitive, single-field WYSIWYG editor. This made it virtually impossible for non-technical users to build or manage modern, multi-column layouts, or complex media sections.
+The CMS backend architecture was highly restrictive, offering content administrators nothing more than a primitive, single-field WYSIWYG editor. This made it virtually impossible for non-technical users to build or manage modern, multi-column layouts, or complex media sections.<br />
+Compounding this challenge was the requirement for full multi-lingual support, requiring the custom layouts to dynamically support both English and French localized content.
 
 <br /><h2>Core Objectives</h2>
 <strong>Design Optimization & Quality Assurance</strong><br />
@@ -31,12 +32,15 @@ Implement native semantic markup to optimize search engine indexing (SEO) and st
 <strong>No-Code Layout Engine (The Hybrid CMS)</strong><br />
 Build a bespoke compiler inside the frontend template layer that translates basic text markers from a WYSIWYG editor into advanced layout rows automatically.
 
+<strong>Dynamic Localization</strong><br />
+Implement the frontend to seamlessly support multi-language localized content (English and French), ensuring a unified user experience and proper SEO indexing for both regions.
+
 <br /><h2>My Approach & Implementation</h2>
 <h3>1. UX Consulting & Pre-Development Audit</h3>
 Leveraging my senior frontend experience in both design and development, I intercepted the creative agency’s designs early on. I discovered and flagged critical missing details, including missing hover/active interactive states, and severe web accessibility compliance gaps. By actively providing concrete solutions and layouts, I enabled the marketing team to quickly update the designs, mitigating production bottlenecks before coding began.
 
 <h3>2. Engineering the WYSIWYG-to-Layout Compiler</h3>
-To bypass the constraints of the primitive CMS, I utilized Liquid Markup to engineer an abstract parsing engine. Non-technical administrators could now build highly complex, responsive components simply by typing simple text markers (e.g., SECTION CAROUSEL START) directly around their text inside the WYSIWYG editor.
+To bypass the constraints of the primitive CMS, I utilized Liquid Markup to engineer an abstract parsing engine. Non-technical administrators could now build highly complex, responsive components simply by typing simple text markers (e.g., SECTION CAROUSEL START) directly around their text inside the WYSIWYG editor. Furthermore, I designed this layout engine to be fully localized. By tying the parsed sections to page tags and Liquid language variables, the compiler automatically rendered localized UI text strings (such as form buttons, ARIA labels, and navigation paths) in either English or French based on the user's active locale, ensuring zero content-drift across both versions of the career site.
 
 My backend Liquid script intercepts these blocks, isolates the text content, cleans formatting white spaces, and loops through a dynamic configuration matrix to seamlessly insert the underlying modular Foundation code.
 
@@ -54,3 +58,6 @@ Transformed a rigid, primitive text field into a modular page-building experienc
 
 <strong>Production-Grade Compliance</strong><br />
 Delivered a completely semantic, high-performance web experience that met rigid corporate compliance standards for cross-browser testing and web accessibility.
+
+<strong>Seamless Bilingual Launch</strong><br />
+Deployed a fully localized English and French experience across all custom modules simultaneously, successfully capturing regional talent pools without requiring separate page builds.
