@@ -2,10 +2,10 @@
 
 <h2>Project Overview</h2>
 <pre>
-<b>Project Name:</b> TELUS Career Site
-<b>Role:</b>         UI Developer & Accessibility/UX Consultant
-<b>Timeline:</b>     2 Weeks (Accelerated from a 7-week initial estimate)
-<b>Tools:</b>        Liquid Markup, HTML5, CSS3, JavaScript / jQuery, Foundation, Figma
+<b>Project:</b>   TELUS Career Site
+<b>Role:</b>      UI Developer & Accessibility/UX Consultant
+<b>Timeline:</b>  2 Weeks (Accelerated from a 7-week initial estimate)
+<b>Tools:</b>     Liquid Markup, HTML5, CSS3, JavaScript / jQuery, Foundation, Figma
 </pre>
 &nbsp;<strong><a href="https://jobs.telusdigital.com/">View project</a></strong>
 
