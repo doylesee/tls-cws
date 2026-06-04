@@ -1,0 +1,83 @@
+{%- comment -%}
+██╗██╗██╗  ░██████╗████████╗░█████╗░██████╗░  ██╗██╗██╗
+██║██║██║  ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗  ██║██║██║
+██║██║██║  ╚█████╗░░░░██║░░░██║░░██║██████╔╝  ██║██║██║
+╚═╝╚═╝╚═╝  ░╚═══██╗░░░██║░░░██║░░██║██╔═══╝░  ╚═╝╚═╝╚═╝
+██╗██╗██╗  ██████╔╝░░░██║░░░╚█████╔╝██║░░░░░  ██╗██╗██╗
+╚═╝╚═╝╚═╝  ╚═════╝░░░░╚═╝░░░░╚════╝░╚═╝░░░░░  ╚═╝╚═╝╚═╝
+
+This code is intended for use and maintenance by authorized Talemetry CWS Developers only.
+If you are not part of the Talemetry CWS Development team, refrain from making any edits or modifications to the code.
+Unauthorized changes may result in functionality issues or unintended errors.
+
+For any updates, questions, or concerns, please contact your Account Manager for assistance.
+
+░█▀▀▀█ ▀█▀ ▀▀█▀▀ ░█▀▀▀ 　 ░█─░█ ░█▀▀▀█ ░█▀▀▀ ░█▀▀▀█ 　 ▀▀█▀▀ ░█─░█ ░█▀▀▀ ░█▀▄▀█ ░█▀▀▀ ░█▀▀▀█ 
+─▀▀▀▄▄ ░█─ ─░█── ░█▀▀▀ 　 ░█─░█ ─▀▀▀▄▄ ░█▀▀▀ ─▀▀▀▄▄ 　 ─░█── ░█▀▀█ ░█▀▀▀ ░█░█░█ ░█▀▀▀ ─▀▀▀▄▄ 
+░█▄▄▄█ ▄█▄ ─░█── ░█▄▄▄ 　 ─▀▄▄▀ ░█▄▄▄█ ░█▄▄▄ ░█▄▄▄█ 　 ─░█── ░█─░█ ░█▄▄▄ ░█──░█ ░█▄▄▄ ░█▄▄▄█
+
+This site utilizes the 'Telus CWS Theme' for styling and functionality.
+Please update the Theme directly rather than making changes to this site.
+Once updated, ensure the Theme is re-applied to all applicable sites to maintain consistency across the platform.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{%- endcomment -%}
+{% page_required_header %}
+
+{% include '_var__reusable-texts' %}
+{% include '/_config__variables' %}
+{% include '/_config__page-object' %}
+
+<div id="header-wrapper-fixed-bottom"></div>
+<div class="page-details-wrapper">
+    <div class="page-details body-wrapper"{% if page.images.size > 0 %} style="background-image: url('{{ page_object.images[0].url }}');"{% endif %}>
+        {% if page_object_has_banner != 'true' %}
+        <section>
+            <div class="space-xlarge"></div>
+            <div class="row">
+                <div class="column">
+                    <h1>{{ page_object.title | html_safe }}</h1>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {% comment %}Include Page Section logic to format page sections (signified by START and END <pre> tags{% endcomment %}
+        {{ page_object.content | assign_to: 'page_object_content' }}
+        {% include '/_config__page-sections' %}
+    </div><!--close .page-details-->
+</div><!--close .page-details-wrapper-->
+
+{% page_required_footer %}

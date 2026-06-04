@@ -1,0 +1,388 @@
+{%- comment -%}
+██╗██╗██╗  ░██████╗████████╗░█████╗░██████╗░  ██╗██╗██╗
+██║██║██║  ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗  ██║██║██║
+██║██║██║  ╚█████╗░░░░██║░░░██║░░██║██████╔╝  ██║██║██║
+╚═╝╚═╝╚═╝  ░╚═══██╗░░░██║░░░██║░░██║██╔═══╝░  ╚═╝╚═╝╚═╝
+██╗██╗██╗  ██████╔╝░░░██║░░░╚█████╔╝██║░░░░░  ██╗██╗██╗
+╚═╝╚═╝╚═╝  ╚═════╝░░░░╚═╝░░░░╚════╝░╚═╝░░░░░  ╚═╝╚═╝╚═╝
+
+This code is intended for use and maintenance by authorized Talemetry CWS Developers only.
+If you are not part of the Talemetry CWS Development team, refrain from making any edits or modifications to the code.
+Unauthorized changes may result in functionality issues or unintended errors.
+
+For any updates, questions, or concerns, please contact your Account Manager for assistance.
+
+░█▀▀▀█ ▀█▀ ▀▀█▀▀ ░█▀▀▀ 　 ░█─░█ ░█▀▀▀█ ░█▀▀▀ ░█▀▀▀█ 　 ▀▀█▀▀ ░█─░█ ░█▀▀▀ ░█▀▄▀█ ░█▀▀▀ ░█▀▀▀█ 
+─▀▀▀▄▄ ░█─ ─░█── ░█▀▀▀ 　 ░█─░█ ─▀▀▀▄▄ ░█▀▀▀ ─▀▀▀▄▄ 　 ─░█── ░█▀▀█ ░█▀▀▀ ░█░█░█ ░█▀▀▀ ─▀▀▀▄▄ 
+░█▄▄▄█ ▄█▄ ─░█── ░█▄▄▄ 　 ─▀▄▄▀ ░█▄▄▄█ ░█▄▄▄ ░█▄▄▄█ 　 ─░█── ░█─░█ ░█▄▄▄ ░█──░█ ░█▄▄▄ ░█▄▄▄█
+
+This site utilizes the 'Telus CWS Theme' for styling and functionality.
+Please update the Theme directly rather than making changes to this site.
+Once updated, ensure the Theme is re-applied to all applicable sites to maintain consistency across the platform.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{%- endcomment -%}
+<!doctype html>
+<html class="no-js" lang="{{ current_locale.locale }}">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+        
+        <link rel="shortcut icon" type="image/x-icon" href="/system/production/assets/515308/original/telus__icon.png">
+        <link rel="stylesheet" href="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        {% careersites_required_head_tags %}
+        <script>var $cs = $;</script>
+
+        {% include '/_config__variables' %}
+        {% include '_var__reusable-texts' %}
+        {% include '/_config__meta-seo' %}
+
+        {% capture page_title %}{% careersites_required_title %}{% endcapture %}
+
+        <!--SEO Meta Content Logic-->
+        <title>{{ meta_title }}</title>
+
+        {% if seo_to_index == 'true' %}
+            {% if root_url contains 'preview' or root_url contains '-dev' %}
+                <meta name="robots" content="noindex, nofollow">
+            {% else %}
+                {% if job %}
+                    <meta name="robots" content="index, nofollow">
+                {% else %}
+                    <meta name="robots" content="index, follow">
+                {% endif %}
+            {% endif %}
+        {% else %}
+            <meta name="robots" content="noindex, nofollow">
+        {% endif %}
+
+        {% capture current_url_with_current_locale_permalink %}{{ request_host_with_port }}{{ locale_permalink }}{% endcapture %}
+        {% capture current_url %}https://{{ request_host_with_port }}{{ request_path }}{% endcapture %}
+        {% capture canonical_url %}{{ current_url | replace: current_url_with_current_locale_permalink,request_host_with_port }}{% endcapture %}
+        <link rel="canonical" href="{{ canonical_url }}" />
+
+        {% for locale in available_locales %}
+            {% capture current_url_with_locale_permalink %}{{ request_host_with_port }}/{{ locale.locale }}{% endcapture %}
+            {% capture locale_canonical_url %}{{ canonical_url | replace: request_host_with_port,current_url_with_locale_permalink }}{% endcapture %}
+            <link href="{{ locale_canonical_url }}" hreflang="{{ locale.locale }}" rel="alternate" type="text/html"/>
+        {% endfor %}
+
+        {% if meta_description != blank %}
+            <meta name="description" content="{{ meta_description }}">
+        {% endif %}
+        {% comment %}
+        {% if meta_keywords != blank %}
+            <meta name="keywords" content="{{ meta_keywords }}">
+        {% endif %}
+        Removed because meta keywords are outdated, irrelevant and has no impact on search engine rankings; and could even hurt SEO
+        {% endcomment %}
+        <!--END SEO Meta Content Logic-->
+
+        <meta property="og:title" content="{{ meta_title }}" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="{{ root_url }}system/production/assets/515309/original/telus__social-share.jpg" />
+        <meta property="og:url" content="{{ root_url }}{{ request_fullpath | remove_first: '/' }}" />
+        {% if meta_description != blank %}<meta property="og:description" content="{{ meta_description }}" />{% endif %}
+        <meta property="og:locale" content="{% if current_locale.locale != blank %}{{ current_locale.locale }}{% else %}en{% endif %}" />
+        <meta property="og:site_name" content="{{ career_site.name }}" />
+
+        {% capture site_scripts_head %}/scripts__{{ cb_site_type }}--head{% endcapture %}
+        {% include site_scripts_head %}
+    </head>
+    <body id="{% if cb_is_home_page == 'true' %}careers-home{% else %}{{ template.permalink }}{% endif %}" class="{{ cb_site_type }} scroll">
+        {% capture site_scripts_body %}/scripts__{{ cb_site_type }}--body{% endcapture %}
+        {% include site_scripts_body %}
+
+        <div class="width-detector"></div>
+        <div class="locale-detector-js hide">{{ current_locale.locale }}</div>
+
+        <div class="saved-jobs-alert-wrapper full-height full-width hide-for-print" role="alert">
+            <div class="saved-jobs-alert">
+                <div class="saved-jobs-alert__check padded-medium">
+                    <i class="fa fa-circle-check" aria-hidden="true"></i>
+                </div>
+                <div class="saved-jobs-alert__message padded-medium"></div>
+            </div><!--close .saved-jobs-alert-->
+        </div><!--close .saved-jobs-alert-wrapper-->
+
+        <div class="page-container fadeIn{% if job and params['savejob'] == '1' %} hide{% endif %}">
+
+            <div class="hide">
+                {% capture returnurl %}return_url\":\"http:\\\\\\\\\\\\\\\\{{career_site.domain}}/\"{% endcapture %}
+                {% capture tn %}
+                  {{ "Join our Talent Network" | link_to_talent_network: "talent-network-main", "talent-network-main" }}
+                {% endcapture %}
+                {{ tn | replace: 'return_url\":null', returnurl }}
+            </div>
+
+            <a class="skip-main background-3 hide-for-print" href="#main" rel="nofollow">{{ text_skip_to_main_content }}</a>
+
+            {% capture language_select_html %}
+            <span class="header__language-select-outer">
+                <button class="header__language-select-js" aria-expanded="false"><span class="hide-for-large">{{ text_language }} (</span>{{ current_locale.locale | capitalize }}<span class="hide-for-large">)</span></button>
+                <div class="header__language-select-list-js" aria-hidden="true">
+                    <button class="language-back-link-js hide-for-large">{{ text_language }}</button>
+                    {% if params['ns_category'] != blank %}
+                        {% if current_locale.locale == 'en' %}
+                            {% capture category_tag %}{{ params['ns_category'] }}-jobs-content{% endcapture %}
+                        {% else %}
+                            {% capture current_locale_dash %}{{ current_locale.locale }}-{% endcapture %}
+                            {% capture category_tag %}{{ params['ns_category'] | remove_first: current_locale_dash }}-jobs-content{% endcapture %}
+                        {% endif %}
+                    {% endif %}
+
+                    <ul>
+                        <li class="show-for-large"><span>{{ text_select_your_language }}</span></li>
+                        {% for locale in available_locales %}
+                            {% comment %}Dynamically capture locale-specific URL for Category pages{% endcomment %}
+                            {% if params['ns_category'] != blank %}
+                                {% if locale.locale == 'en' %}
+                                    {% capture category_locale_tag %}{{ category_tag }}{% endcapture %}
+                                {% else %}
+                                    {% capture category_locale_tag %}{{ locale.locale }}-{{ category_tag }}{% endcapture %}
+                                {% endif %}
+
+                                {{ category_locale_tag | pages_with_tag | assign_to: 'category_locale_object' }}
+                                {% capture category_locale_url %}/pages/{{ category_locale_object[0].permalink }}{% endcapture %}
+                            {% endif %}
+
+                            {% comment %}Dynamically capture locale-specific URL for Location pages - this is with DavidF / customer's confirmation that all Country job data will all be in English{% endcomment %}
+                            {% if request_fullpath contains '/search/jobs/in/country/' %}
+                                {% if locale.locale == 'en' %}
+                                    {% capture category_locale_url %}{{ original_path | replace: current_lang, '/en' }}{% endcapture %}
+                                {% else %}
+                                    {% capture category_locale_url %}{{ original_path | replace: current_lang, new_lang }}{% endcapture %}
+                                {% endif %}
+                            {% endif %}
+
+                            {% if category_locale_url != blank %}
+                                {% capture locale_url %}{{ category_locale_url }}{% endcapture %}
+                            {% else %}
+                                {% capture locale_url %}{{ locale.url }}{% endcapture %}
+                            {% endif %}
+
+                            <li{% if locale.locale == current_locale.locale %} class="current-locale"{% endif %}>
+                                {% if locale.locale == current_locale.locale %}<span>{% else %}<a href="{{ locale_url }}">{% endif %}
+                                {{ locale.label }} ({{ locale.locale | upcase }})
+                                {% if locale.locale == current_locale.locale %}</span>{% else %}</a>{% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </span><!--close .header__language-select-outer-->
+            {% endcapture %}
+            
+            <div class="top-wrapper">
+                <div class="header-anchor js"></div>
+                <div class="header-outer">
+                    <header>
+                        <div class="row">
+                            <div class="columns small-6 large-3 header__logo">
+                                <div class="padded-v-medium">
+                                    <a href="{{ root_url }}{{ current_locale.locale }}"><img src="{{ text_header_logo }}{% asset_seed %}" alt="{{ cb_company_name }}" /></a>
+                                </div>
+                            </div>
+                            <div class="hide-for-print columns small-6 header__menu-mobile text-right hide-for-large">
+                                <div class="padded-v-medium">
+                                    <button class="ds-menu-icon" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                                        <span class="ds-line ds-line-1"></span>
+                                        <span class="ds-line ds-line-2"></span>
+                                        <span class="ds-line ds-line-3"></span>
+                                        <span class="show-for-sr">{{ text_menu }}</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="hide-for-print columns large-6 header__menu large-text-center" aria-hidden="true">
+                                <nav>
+                                    <ul class="clearfix">
+                                        {% if cb_site_type == 'external' %}
+                                            {{ text_header_nav_external }}
+                                        {% elsif cb_site_type == 'internal' %}
+                                            <li><a href="/pages/internal-careers"{% if params['ns_category'] == 'internal-careers' %} class="active"{% endif %}>Internal Careers</a></li>
+                                            <li><a href="/pages/referral-portal"{% if params['ns_category'] == 'referral-portal' %} class="active"{% endif %}>Referral Portal</a></li>
+                                            <li><a href="/pages/internal-mobility"{% if template.permalink == 'pages-internal-mobility' %} class="active"{% endif %}>Internal Mobility Program</a></li>
+                                            <!-- <li><a href="{{ current_locale.locale | candidate_portal_url }}" target="_blank" rel="nofollow">Login</a></li> -->
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+
+                                <div class="hide-for-large padded-v-large">
+                                    <div class="padded-v-xsmall branded-search">
+                                        <div class="row">
+                                            <div class="columns">
+                                                <a href="{{ current_locale.locale | candidate_portal_url }}" target="_blank" rel="nofollow" class="branded-button-2 full-width">{{ text_login }}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if cb_site_type != 'internal' %}
+                                <div class="hide-for-large header-language-outer">
+                                    {{ language_select_html }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="hide-for-print columns large-3 show-for-large">
+                                <div class="padded-v-medium branded-search text-right">
+                                    {% if cb_site_type != 'internal' %}{{ language_select_html }}{% endif %}
+                                    <a href="{{ current_locale.locale | candidate_portal_url }}" target="_blank" rel="nofollow" class="branded-button-2">{{ text_login }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </header><!--close header-->
+                </div><!--close .header-outer-->
+            </div><!--close .top-wrapper-->
+
+            <div id="main" tabindex="-1"></div>
+            <div class="template-content{% if params['savejob'] == '1' %} hide{% endif %}" role="main">
+                {{ template_content }}
+            </div><!--close .template-content-->
+
+            <footer>
+                {% if cb_is_home_page == 'true' or request_fullpath contains '/search' or job %}
+                    <div class="padded-v-xlarge background-3 talent-network-section">
+                        <div class="row">
+                            <div class="column text-center">
+                                <div class="talent-network-section-inner background-dark padded-xlarge">
+                                    <div class="row">
+                                        <div class="columns large-10 large-offset-1 end">
+                                            {% if cb_site_type == 'external' %}
+                                                {{ text_talent_network_blurb }}
+
+                                            {% elsif cb_site_type == 'internal' %}
+                                                <p class="heading-3">Don't see the perfect role for you today?</p>
+                                                <p class="heading-4 space-large">Join our Internal Mobility talent pool and let our talent acquisition team know about your career goals. We'll keep you on our radar for new roles that align with your aspirations.</p>
+
+                                            {% endif %}
+
+                                            <p class="space-none">
+                                                <a href="javascript:void(0);" class="branded-button-3 talent-network-link" rel="nofollow">
+                                                {% if cb_site_type == 'external' %}
+                                                    {{ text_talent_network }}
+
+                                                {% elsif cb_site_type == 'internal' %}
+                                                    Join our Internal Mobility
+                                                    
+                                                {% endif %}
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="background-7 background-dark">
+                    <div class="padded-v-large">
+                        <div class="row padded-v-medium space-medium">
+                            <div class="columns">
+                                <img src="{{ text_footer_logo }}{% asset_seed %}" alt="{{ cb_company_name }}" style="max-height: 32px;" />
+                            </div>
+                        </div>
+                        <div class="row footer-column-nav-outer hide-for-print">
+                            <div class="columns large-4 end footer-column-nav">
+                                <div class="footer-column-nav-inner">
+                                    {{ text_footer_nav_1 }}
+                                </div>
+                            </div>
+                            <div class="columns large-4 end footer-column-nav">
+                                <div class="footer-column-nav-inner">
+                                    {{ text_footer_nav_2 }}
+                                </div>
+                            </div>
+                            <div class="columns large-4 end footer-column-nav">
+                                <div class="footer-column-nav-inner">
+                                    {{ text_footer_nav_3 }}
+                                </div>
+
+                                <div class="footer__social-media-outer">
+                                    <div class="space-small"><a href="https://www.telusdigital.com/insights/subscribe?linkname=subscribe&linktype=footer">{{ text_subscribe_to_newsletter }}</a></div>
+                                    <div class="footer__social-media">
+                                        <a href="https://www.linkedin.com/company/telus-digital" target="_blank"><i class="fa-brands fa-linkedin"><span class="show-for-sr">linkedin</span></i></a>
+                                        <a href="https://www.facebook.com/TELUSDigital" target="_blank"><i class="fa-brands fa-facebook"><span class="show-for-sr">facebook</span></i></a>                                    
+                                        <a href="https://www.youtube.com/@TELUSDigital" target="_blank"><i class="fa-brands fa-youtube"><span class="show-for-sr">youtube</span></i></a>
+                                        <a href="https://www.tiktok.com/@telusdigitalsv" target="_blank"><i class="fa-brands fa-tiktok"><span class="show-for-sr">tiktok</span></i></a>
+                                        <a href="https://www.instagram.com/telus_digital/?hl=en" target="_blank"><i class="fa-brands fa-instagram"><span class="show-for-sr">instagram</span></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="padded-v-medium">
+                        <div class="footer-copyright">
+                            <div class="row space-large">
+                                <div class="column">
+                                    <div class="footer-copyright-nav">
+                                        {{ text_footer_copyright_nav }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row space-medium">
+                                <div class="columns medium-7 large-8">
+                                    {{ text_footer_copyright }}
+                                </div>
+                                <div class="columns medium-5 large-4 medium-text-right">
+                                    &copy; {{ 'now' | date: "%Y" }} TELUS Digital
+                                </div>
+                            </div>
+                        </div><!--close .footer-copyright-->
+                    </div>
+                </div>
+            </footer><!--close footer-->
+
+        </div><!--close .page-container-->
+
+        <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.6.3/dist/js/foundation.min.js" integrity="sha256-pRF3zifJRA9jXGv++b06qwtSqX1byFQOLjqa2PTEb2o=" crossorigin="anonymous"></script>
+        <script>$(document).foundation();</script>
+        <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+        
+        {% careersites_required_footer %}
+
+        {% capture site_scripts_footer %}/scripts__{{ cb_site_type }}--footer{% endcapture %}
+        {% include site_scripts_footer %}
+    </body>
+</html>

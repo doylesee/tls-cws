@@ -1,0 +1,109 @@
+{%- comment -%}
+██╗██╗██╗  ░██████╗████████╗░█████╗░██████╗░  ██╗██╗██╗
+██║██║██║  ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗  ██║██║██║
+██║██║██║  ╚█████╗░░░░██║░░░██║░░██║██████╔╝  ██║██║██║
+╚═╝╚═╝╚═╝  ░╚═══██╗░░░██║░░░██║░░██║██╔═══╝░  ╚═╝╚═╝╚═╝
+██╗██╗██╗  ██████╔╝░░░██║░░░╚█████╔╝██║░░░░░  ██╗██╗██╗
+╚═╝╚═╝╚═╝  ╚═════╝░░░░╚═╝░░░░╚════╝░╚═╝░░░░░  ╚═╝╚═╝╚═╝
+
+This code is intended for use and maintenance by authorized Talemetry CWS Developers only.
+If you are not part of the Talemetry CWS Development team, refrain from making any edits or modifications to the code.
+Unauthorized changes may result in functionality issues or unintended errors.
+
+For any updates, questions, or concerns, please contact your Account Manager for assistance.
+
+░█▀▀▀█ ▀█▀ ▀▀█▀▀ ░█▀▀▀ 　 ░█─░█ ░█▀▀▀█ ░█▀▀▀ ░█▀▀▀█ 　 ▀▀█▀▀ ░█─░█ ░█▀▀▀ ░█▀▄▀█ ░█▀▀▀ ░█▀▀▀█ 
+─▀▀▀▄▄ ░█─ ─░█── ░█▀▀▀ 　 ░█─░█ ─▀▀▀▄▄ ░█▀▀▀ ─▀▀▀▄▄ 　 ─░█── ░█▀▀█ ░█▀▀▀ ░█░█░█ ░█▀▀▀ ─▀▀▀▄▄ 
+░█▄▄▄█ ▄█▄ ─░█── ░█▄▄▄ 　 ─▀▄▄▀ ░█▄▄▄█ ░█▄▄▄ ░█▄▄▄█ 　 ─░█── ░█─░█ ░█▄▄▄ ░█──░█ ░█▄▄▄ ░█▄▄▄█
+
+This site utilizes the 'Telus CWS Theme' for styling and functionality.
+Please update the Theme directly rather than making changes to this site.
+Once updated, ensure the Theme is re-applied to all applicable sites to maintain consistency across the platform.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{%- endcomment -%}
+{% page_required_header %}
+
+{% include '_var__reusable-texts' %}
+{% include '/_config__variables' %} 
+{% include '/_config__page-object' %}
+
+{% comment %}Job Category page / redirect{% endcomment %}
+{% if page.tag_list contains 'jobs-content' %}
+    {{ page.tags | where: '-jobs-content' | assign_to: 'job_category_content_tags' }}
+    {% capture job_category_content_tag %}{{ job_category_content_tags[0] | remove: '-jobs-content' }}{% endcapture %}
+
+    {% if current_locale.locale == 'en' %}
+        {% assign page_object_for_redirect = page %}
+        
+    {% else %}
+        {% capture job_category_page_locale_tag %}{{ job_category_content_tags[0] }}{% endcapture %}
+        {{ job_category_page_locale_tag | pages_with_tag | assign_to: 'job_category_page_locale' }}
+        {% assign page_object_for_redirect = job_category_page_locale[0] %}
+        
+    {% endif %}
+
+    {% comment %}Capture Job Category param/s{% endcomment %}
+    {% capture page_content_formatted %}{{ page_object_for_redirect.content | replace: '<p>','---' | replace: '</p>','---' }}{% endcapture %}
+    {% assign page_content_array = page_content_formatted | split: '---' | assign_to: 'page_element_attr' %}
+    {% assign job_category_params = page_element_attr[1] | strip %}
+
+    {% capture job_category_permalink %}{{ job_category_params }}{% if job_category_params contains '?' %}&{% else %}?{% endif %}ns_category={{ job_category_content_tag }}{% endcapture %}
+    {% redirect_permanent job_category_permalink %}
+
+{% comment %}Just a regular page{% endcomment %}
+{% else %}
+    <div class="page-details-wrapper">
+        <div class="page-details body-wrapper"{% if page.images.size > 0 %} style="background-image: url('{{ page.images[0].url }}');{% endif %}">
+            {% if page_object_has_banner != 'true' %}
+            <section>
+                <div class="space-xlarge"></div>
+                <div class="row">
+                    <div class="column large-8 end">
+                        <h1 class="heading-2">{{ page_object.title | html_safe }}</h1><!--design is inconsistent, as they have outlined styles for H1 but customer wants this to display like an H2-->
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+
+            {% comment %}Include Page Section logic to format page sections (signified by START and END <pre> tags{% endcomment %}
+            {{ page_object.content | assign_to: 'page_object_content' }}
+            {% include '/_config__page-sections' %}
+        </div><!--close .page-details-->
+    </div><!--close .page-details-wrapper-->
+
+{% endif %}
+            
+{% page_required_footer %}
