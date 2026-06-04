@@ -61,3 +61,5 @@ Delivered a completely semantic, high-performance web experience that met rigid 
 
 <strong>Seamless Bilingual Launch</strong><br />
 Deployed a fully localized English and French experience across all custom modules simultaneously, successfully capturing regional talent pools without requiring separate page builds.
+
+<br /><strong><a href="https://jobs.telusdigital.com/">View project</a></strong>
