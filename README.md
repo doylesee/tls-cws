@@ -35,7 +35,7 @@ Build a bespoke compiler inside the frontend template layer that translates basi
 Leveraging my senior frontend experience in both design and development, I intercepted the creative agency’s designs early on. I discovered and flagged critical missing details, including missing hover/active interactive states, and severe web accessibility compliance gaps. By actively providing concrete solutions and layouts, I enabled the marketing team to quickly update the designs, mitigating production bottlenecks before coding began.
 
 <h3>2. Engineering the WYSIWYG-to-Layout Compiler</h3>
-To bypass the constraints of the primitive CMS, I utilized Liquid Markup to engineer an abstract parsing engine. Non-technical administrators could now build highly complex, responsive components simply by typing simple text markers (e.g., <pre>SECTION CAROUSEL START</pre>) directly around their text inside the WYSIWYG editor.
+To bypass the constraints of the primitive CMS, I utilized Liquid Markup to engineer an abstract parsing engine. Non-technical administrators could now build highly complex, responsive components simply by typing simple text markers (e.g., SECTION CAROUSEL START) directly around their text inside the WYSIWYG editor.
 
 My backend Liquid script intercepts these blocks, isolates the text content, cleans formatting white spaces, and loops through a dynamic configuration matrix to seamlessly insert the underlying modular Foundation code.
 
