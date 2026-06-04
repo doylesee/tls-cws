@@ -1,4 +1,4 @@
-<p><a href="https://jobs.telusdigital.com/"><img src="https://64.media.tumblr.com/28cc842f6d23aee860e85f6df58dce7a/0a6565af22dd042d-25/s1280x1920/832c947512a6ad6339b1e53bc4b98d3c517741a7.jpg" /></a></p>
+<p><a href="https://jobs.telusdigital.com/"><img src="https://doylesee.github.io/tls-cws/thumbnail.jpeg" /></a></p>
 
 <h2>Project Overview</h2>
 <pre>
