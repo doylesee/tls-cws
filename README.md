@@ -9,7 +9,8 @@
 </pre>
 &nbsp;<strong><a href="https://jobs.telusdigital.com/">View project</a></strong>
 
-<br /><h2>The Challenge</h2>
+<br />
+<h2>The Challenge</h2>
 The client required a highly complex, custom career portal based on high-fidelity Figma designs provided by their third-party marketing agency. However, the project presented two massive hurdles:
 
 <strong>Compressed Timeline</strong><br />
