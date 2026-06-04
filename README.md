@@ -11,10 +11,11 @@
 
 <br /><h2>The Challenge</h2>
 The client required a highly complex, custom career portal based on high-fidelity Figma designs provided by their third-party marketing agency. However, the project presented two massive hurdles:
-<h3>Compressed Timeline</h3>
+
+<strong>Compressed Timeline</strong><br />
 A project originally scoped and quoted for a 7-week delivery window was heavily accelerated by the client, demanding full execution in just 2 weeks.
 
-<h3>CMS Technical Limitations</h3>
+<strong>CMS Technical Limitations</strong><br />
 The CMS backend architecture was highly restrictive, offering content administrators nothing more than a primitive, single-field WYSIWYG editor. This made it virtually impossible for non-technical users to build or manage modern, multi-column layouts, or complex media sections.
 
 <br /><h2>Core Objectives</h2>
