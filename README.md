@@ -1,5 +1,3 @@
-<p><a href="https://jobs.telusdigital.com/"><img src="https://doylesee.github.io/tls-cws/thumbnail.jpeg" /></a></p>
-
 ## Project Overview
 <pre>
 <b>Project:</b>   TELUS Career Site
@@ -9,6 +7,7 @@
 </pre>
 &nbsp;<strong><a href="https://jobs.telusdigital.com/">View project</a></strong>
 
+<p><a href="https://jobs.telusdigital.com/"><img src="https://doylesee.github.io/tls-cws/thumbnail.jpeg" /></a></p>
 <br />
 
 ## The Challenge
