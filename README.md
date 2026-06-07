@@ -3,7 +3,7 @@
 <b>Project:</b>   TELUS Career Site
 <b>Role:</b>      UI Developer & Accessibility/UX Consultant
 <b>Timeline:</b>  2 Weeks (Accelerated from a 7-week initial estimate)
-<b>Tools:</b>     Figma, Liquid, HTML5, CSS3, JavaScript / jQuery, Foundation
+<b>Tools:</b>     Figma, Liquid, HTML5, CSS3, JS/jQuery, Foundation
 </pre>
 &nbsp;<strong><a href="https://jobs.telusdigital.com/">View project</a></strong>
 
