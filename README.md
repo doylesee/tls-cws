@@ -5,9 +5,9 @@
 <b>Timeline:</b>  2 Weeks (Accelerated from a 7-week initial estimate)
 <b>Tools:</b>     Figma, Liquid, HTML5, CSS3, JS/jQuery, Foundation
 </pre>
-&nbsp;<strong><a href="https://jobs.telusdigital.com/">View project</a></strong>
+&nbsp;<strong><a href="https://jobs.telusdigital.com/" rel="noopener noreferrer">View project</a></strong>
 
-<p><a href="https://jobs.telusdigital.com/"><img src="https://doylesee.github.io/tls-cws/thumbnail.jpeg" /></a></p>
+<p><a href="https://jobs.telusdigital.com/" rel="noopener noreferrer"><img src="https://doylesee.github.io/tls-cws/thumbnail.jpeg" /></a></p>
 <br />
 
 ## The Challenge
@@ -93,4 +93,4 @@ Deployed a fully localized English and French experience across all custom modul
 **Flawless Project Governance**<br />
 Successfully bridged a critical leadership gap by self-managing the project cycle, resulting in an organized data pipeline, an efficient testing process, and a transparent communication that delighted the client despite the high-stress timeline.
 
-<br /><strong><a href="https://jobs.telusdigital.com/">View project</a></strong>
+<br /><strong><a href="https://jobs.telusdigital.com/" rel="noopener noreferrer">View project</a></strong>
