@@ -26,22 +26,22 @@ Compounding the compressed timeline, the assigned Project Manager went on unexpe
 <br />
 
 ## Core Objectives
-**Design Optimization & Quality Assurance**<br />
+🟠 **Design Optimization & Quality Assurance**<br />
 Audit Figma designs for technical usability gaps, user flow oversights, and web accessibility flaws before development.
 
-**Rapid Component Development**<br />
+🟠 **Rapid Component Development**<br />
 Build a comprehensive UI library, ensuring flawless responsiveness and cross-browser performance under a critical deadline.
 
-**Semantic & Accessible Coding**<br />
+🟠 **Semantic & Accessible Coding**<br />
 Implement semantic coding to optimize search engine indexing (SEO) and strict WCAG compliance for screen readers.
 
-**No-Code Layout Engine (The Hybrid CMS)**<br />
+🟠 **No-Code Layout Engine (The Hybrid CMS)**<br />
 Build a bespoke compiler inside the frontend template that translates basic text markers from a WYSIWYG editor into advanced layouts automatically.
 
-**Dynamic Localization**<br />
+🟠 **Dynamic Localization**<br />
 Implement the frontend to seamlessly support multi-language localized content (English and French), ensuring a unified user experience and proper SEO indexing for both regions.
 
-**Cross-Functional Leadership**<br />
+🟠 **Cross-Functional Leadership**<br />
 Step in to absorb all Project Manager responsibilities, establishing clear communication, centralized assets, and an organized testing process to ensure zero information loss.
 
 <br />
@@ -78,19 +78,19 @@ Additionally, to optimize performance under the tight deadline, I added an autom
 <br />
 
 ## Results & Impact
-**High-Speed Delivery**<br />
+✅ **High-Speed Delivery**<br />
 Successfully launched a fully functional, complex digital product in 2 weeks, cutting the original 7-week development projection by more than 70%.
 
-**Empowered Non-Technical Teams**<br />
+✅ **Empowered Non-Technical Teams**<br />
 Transformed a rigid, primitive text field into a modular page-building experience, allowing the client to spin up rich media, grids, and galleries completely independently and with zero coding knowledge.
 
-**Production-Grade Compliance**<br />
+✅ **Production-Grade Compliance**<br />
 Delivered a completely semantic, high-performance web experience that met rigid corporate compliance standards for cross-browser testing and web accessibility.
 
-**Seamless Bilingual Launch**<br />
+✅ **Seamless Bilingual Launch**<br />
 Deployed a fully localized English and French experience across all custom modules simultaneously, successfully capturing regional talent pools.
 
-**Flawless Project Governance**<br />
+✅ **Flawless Project Governance**<br />
 Successfully bridged a critical leadership gap by self-managing the project cycle, resulting in an organized data pipeline, an efficient testing process, and a transparent communication that delighted the client despite the high-stress timeline.
 
 <br /><strong><a href="https://jobs.telusdigital.com/" rel="noopener noreferrer">View project</a></strong>
