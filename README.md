@@ -57,7 +57,7 @@ I bypassed slow email chains by communicating directly with the client via conte
 I started a dedicated, private Slack channel for all internal stakeholders (including the on-leave PM for visibility) to centralize technical discussions, surface roadblocks instantly, and provide the team with a single source of truth.
 
 **Organized SharePoint Access**<br />
-I built a highly structured, intuitive folder structure in SharePoint to store all incoming copy, media assets, and requirements, allowing the team to easily track project pages and files.
+I built a highly intuitive folder structure in SharePoint to store all incoming copy, media assets, and requirements, allowing the team to easily track project pages and files.
 
 **Streamlined UAT Testing**<br />
 To manage the crunch-time User Acceptance Testing (UAT), I created a clean, intuitive QA log sheet. This standardized template allowed the client to easily log issues, enabling me to rapidly work on issues and change requests without wasting time.
