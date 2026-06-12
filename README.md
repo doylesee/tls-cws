@@ -17,7 +17,7 @@ The client required a highly complex, custom career portal based on Figma design
 <br />A project originally scoped and quoted for a 7-week delivery was heavily accelerated by the client, demanding full execution in just 2 weeks.
 
 **CMS Technical Limitations**<br />
-The CMS backend was highly restrictive, offering content administrators nothing more than a single-field WYSIWYG editor. This made it virtually impossible for non-technical users to build or manage modern, multi-column layouts, or complex media sections.<br />
+The CMS backend was highly restrictive, offering content administrators nothing more than a single-field WYSIWYG editor. This made it impossible for non-technical users to build or manage modern, multi-column layouts, or complex media sections.<br />
 Compounding this challenge was the requirement for full multi-lingual support, requiring the custom layouts to dynamically support both English and French localized content.
 
 **Leadership & Project Management Gap**<br />
