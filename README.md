@@ -11,7 +11,7 @@
 <br />
 
 ## The Challenge
-The client required a highly complex, custom career portal based on Figma designs provided by their third-party marketing agency. However, the project presented two massive hurdles:
+The client required a highly complex, custom career portal based on Figma designs provided by their third-party marketing agency. However, the project presented three massive hurdles:
 
 **Compressed Timeline**
 <br />A project originally scoped and quoted for a 7-week delivery was heavily accelerated by the client, demanding full execution in just 2 weeks.
