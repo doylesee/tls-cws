@@ -85,7 +85,7 @@ Successfully launched a fully functional, complex digital product in 2 weeks, cu
 Transformed a rigid, primitive text field into a modular page-building experience, allowing the client to spin up rich media, grids, and galleries completely independently and with zero coding knowledge.
 
 ✅ **Production-Grade Compliance**<br />
-Delivered a completely semantic, high-performance web experience that met rigid corporate compliance standards for cross-browser testing and web accessibility.
+Delivered a completely semantic, high-performance web experience that met strict corporate compliance standards for cross-browser testing and web accessibility.
 
 ✅ **Seamless Bilingual Launch**<br />
 Deployed a fully localized English and French experience across all custom modules simultaneously, successfully capturing regional talent pools.
