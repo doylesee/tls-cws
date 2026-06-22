@@ -48,7 +48,7 @@ Step in to absorb all Project Manager responsibilities, establishing clear commu
 
 ## My Approach & Implementation
 ### 1. Crisis Management & Operational Structure
-With the Project Manager on leave during an escalated 2-week turnaround, I immediately stepped up to manage client relations and internal operations. To prevent critical details from slipping through the cracks, I executed a multi-layered communication and organizational strategy:
+With the Project Manager on leave during an escalated 2-week turnaround, I immediately stepped up to manage client relations and internal operations. To prevent critical details from slipping through the cracks, I executed a communication and organizational strategy:
 
 **Direct Figma Collaboration**<br />
 I bypassed slow email chains by communicating directly with the client via contextual comments inside their Figma design files, clarifying design ambiguities and gathering requirements in real time.
