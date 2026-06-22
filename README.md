@@ -18,10 +18,10 @@ The client required a highly complex, custom career portal based on Figma design
 
 **CMS Technical Limitations**<br />
 The CMS backend was highly restrictive, offering content administrators nothing more than a single-field WYSIWYG editor. This made it impossible for non-technical users to build or manage modern, multi-column layouts, or complex media sections.<br />
-Compounding this challenge was the requirement for full multi-lingual support, requiring the custom layouts to dynamically support both English and French localized content.
+Along with this challenge was the requirement for full multi-lingual support, requiring the custom layouts to dynamically support both English and French localized content.
 
 **Leadership & Project Management Gap**<br />
-Compounding the compressed timeline, the assigned Project Manager went on unexpected leave. With no dedicated manager to steer the ship, the project risked falling apart due to a lack of structure and a breakdown in communication.
+In addition to the compressed timeline, the assigned Project Manager went on unexpected leave. With no dedicated manager to steer the ship, the project risked falling apart due to a lack of structure and a breakdown in communication.
 
 <br />
 
