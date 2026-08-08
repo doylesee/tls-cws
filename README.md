@@ -5,14 +5,13 @@
 <b>Timeline:</b>  2 Weeks (Accelerated from a 7-week initial estimate)
 <b>Tools:</b>     Figma, Liquid, HTML5, CSS3, JS/jQuery, Foundation
 </pre>
-&nbsp;<strong><a href="https://jobs.telusdigital.com/" rel="noopener noreferrer">View project</a></strong>
-<br /><br />
 
 ### Table of Contents
 * [The Challenge](#the-challenge)
 * [Core Objectives](#core-objectives)
 * [My Approach & Implementation](#my-approach--implementation)
 * [Results & Impact](#results--impact)
+* [View Project](https://jobs.telusdigital.com/)
 <br />
 
 ## The Challenge
