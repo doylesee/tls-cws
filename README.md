@@ -14,6 +14,10 @@
 * [View Project](https://jobs.telusdigital.com/)
 <br />
 
+<a href="https://jobs.telusdigital.com/">
+  <img src="screenshot.jpg" alt="" width="100%">
+</a>
+
 ## The Challenge
 The client required a highly complex, custom career portal based on Figma designs provided by their third-party marketing agency. However, the project presented three massive hurdles:
 
