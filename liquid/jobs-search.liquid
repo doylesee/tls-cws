@@ -1,0 +1,507 @@
+{%- comment -%}
+██╗██╗██╗  ░██████╗████████╗░█████╗░██████╗░  ██╗██╗██╗
+██║██║██║  ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗  ██║██║██║
+██║██║██║  ╚█████╗░░░░██║░░░██║░░██║██████╔╝  ██║██║██║
+╚═╝╚═╝╚═╝  ░╚═══██╗░░░██║░░░██║░░██║██╔═══╝░  ╚═╝╚═╝╚═╝
+██╗██╗██╗  ██████╔╝░░░██║░░░╚█████╔╝██║░░░░░  ██╗██╗██╗
+╚═╝╚═╝╚═╝  ╚═════╝░░░░╚═╝░░░░╚════╝░╚═╝░░░░░  ╚═╝╚═╝╚═╝
+
+This code is intended for use and maintenance by authorized Talemetry CWS Developers only.
+If you are not part of the Talemetry CWS Development team, refrain from making any edits or modifications to the code.
+Unauthorized changes may result in functionality issues or unintended errors.
+
+For any updates, questions, or concerns, please contact your Account Manager for assistance.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{%- endcomment -%}
+{% include '_var__reusable-texts' %}
+{% include '/_config__variables' %}
+{% include '/_config__page-object' %}
+
+{% page_required_header %}
+
+{% comment %}Check if Saved Jobs are not all archived jobs{% endcomment %}
+{% if params['saved_jobs'] == '1' and jobs.total_entries == 0 %}
+    <script type="text/javascript">
+        var c_jobs_temp = localStorage.getItem('c_jobs_{{ current_locale.locale }}') ? JSON.parse(localStorage.getItem('c_jobs_{{ current_locale.locale }}')) : [];
+        {% if current_locale.locale == 'en' %}
+            {% assign en_locale_permalink = request_fullpath | slice: 0, 4 %}
+        {% endif %}
+        var current_saved_jobs_url = '{% if en_locale_permalink != blank and en_locale_permalink != '/en/' %}{{ locale_permalink }}{% endif %}{{ request_fullpath }}';
+        current_saved_jobs_url = decodeURIComponent(current_saved_jobs_url);
+        var saved_jobs_query = '/{{ current_locale.locale }}/search/jobs?external_id[]='+c_jobs_temp.join('&external_id[]=')+'&saved_jobs=1';
+
+        if (saved_jobs_query == current_saved_jobs_url) {
+            localStorage.removeItem('c_jobs_{{ current_locale.locale }}');
+            setTimeout(function() {
+                {% capture saved_jobs_w_locale %}/{{ current_locale.locale }}/pages/saved-jobs{% endcapture %}
+                window.location.replace('{{ saved_jobs_w_locale }}');
+            }, 2000);
+        }
+    </script>
+{% endif %}
+
+{% comment %}Logic for Referral Hot Jobs vs regular Job Search page{% endcomment %}
+{% comment %}For Internal site's Referral Hot Jobs section{% endcomment %}
+{% if params['ns_hotjobs'] == '1' %}
+    {% capture page_section_content %}
+    {%- for hotjob in jobs -%}
+        <pre>ITEM START</pre>
+        <h2 class="heading-4">{{ hotjob.cfdisplay_BusinessTitle | html_safe }}</h2>
+        <p>
+            <strong>Location:</strong> {{ hotjob.location.city }}<br />
+            {% if hotjob.cfdisplay_Primary_Language != blank %}<strong>Language:</strong> {{ hotjob.cfdisplay_Primary_Language }}<br />{% endif %}
+            {% if hotjob.cfdisplay_Secondary_Language != blank %}<strong>Language:</strong> {{ hotjob.cfdisplay_Secondary_Language }}<br />{% endif %}
+            {% if hotjob.referral_incentive_amount != blank %}<strong>Referral Reward:</strong> {% if hotjob.referral_incentive_currency == 'USD' or hotjob.referral_incentive_currency == 'CAD' %}${% elsif hotjob.referral_incentive_currency == 'EUR' %}€{% elsif hotjob.referral_incentive_currency == 'GBP' %}£{% endif %}{{ hotjob.referral_incentive_amount }} ({{ hotjob.referral_incentive_currency }}){% endif %}
+        </p>
+        <p><a href="{{ hotjob.url }}">More Info</a></p>
+        <pre>ITEM END</pre>
+    {%- endfor -%}
+    {% endcapture %}
+
+    <div class="js-referral-hot-jobs--jobs-search hide--">
+        <h2>Hot Jobs</h2>
+        {% include '/layout-testimonials' %}
+    </div>
+
+{% comment %}Just a regular Job Search page{% endcomment %}
+{% else %}
+    {% if page_object_has_banner != 'true' %}
+    <h1 class="show-for-sr">{{ text_careers_at_company }}</h1>
+    {% endif %}
+
+    {% comment %}Include Page Section logic to format page sections (signified by START and END <pre> tags{% endcomment %}
+    {{ page_object.content | remove: job_category_params_wp | assign_to: 'page_object_content' }}
+    {% capture job_search_page_sections %}
+    {% include '/_config__page-sections' %}
+    {% endcapture %}
+
+    {% if banner_media == blank %}
+    {{ cb_job_search_form }}
+    {% endif %}
+
+    {{ job_search_page_sections }}
+
+    <div class="page-details-wrapper{% if cb_is_referral_portal_page == 'true' and params['location_country'] == blank %} hide this-user-has-no-country-in-their-profile{% endif %}">
+        <section class="job-results body-wrapper padded-v-large"{% if jobs.total_entries > 0 %} style="background-image: url('{% if page_object.images.size > 0 %}{{ page_object.images[0].url }}{% endif %}');"{% endif %}>
+            <div class="jobs-heading">
+                <div class="row">
+                    <div class="columns">
+                        {% if jobs.total_entries > 0 %}
+                            <div class="paragraph-4 color-8 space-large">{{ text_showing }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div><!--close .jobs-heading-->
+
+            <div class="row">
+                {% if jobs.total_entries > 0 and params['saved_jobs'] != '1' %}
+                    <div class="columns large-3">
+                        <div class="facet-section">
+                            <section class="space-medium">
+                                {% capture has_multiple_facet_options %}false{% endcapture %}
+                                <div class="facet-section__heading hide">
+                                    <button class="facet-filter-results-button branded-button branded-button-1 full-width hide-for-large">{{ text_filter_your_results }}</button>
+                                    <h2 class="heading-4 show-for-large">
+                                        {{ text_filter_your_results }}
+                                        <span class="facet-section__clear-all text-small"><a href="{{ "cfm1_seo,cfm2_seo,cfm3_seo,cfm4_seo,cfm5_seo,cfm6_seo,cfm7_seo,cfm8_seo,cfm9_seo,job_tags_seo,location_country_seo,location_state_seo,location_city_seo" | get_facet_url_sans }}" rel="nofollow" class="paragraph-4 color-8 facet-item__option-link js show-for-large">{{ text_clear_all }}</a></span>
+                                    </h2>
+                                </div>
+
+                                <div class="facet-section-inner">
+                                    <!-- Assigning the Facets -->
+                                    {% capture facet_feilds %}
+                                    {% if cb_site_type == 'external' %}
+                                    {{ text_category }}, cfm5_seo, multi, asc, 10, 100, collapsed;
+                                    {{ text_select_a_country }}, location_country_seo, single, asc, 10, 100, collapsed;
+                                    {{ text_select_a_state }}, location_state_seo, single, asc, 10, 100, collapsed;
+                                    {{ text_select_a_city }}, location_city_seo, multi, asc, 10, 100, collapsed;
+                                    {{ text_select_a_language }}, cfm3_seo, single, asc, 10, 100, collapsed;
+
+                                    {% elsif cb_site_type == 'internal' %}
+                                    Category, cfm5_seo, multi, asc, 10, 100, collapsed;
+                                    Country, location_country_seo, multi, asc, 10, 100, collapsed;
+                                    State, location_state_seo, multi, asc, 10, 100, collapsed;
+                                    City, location_city_seo, multi, asc, 10, 100, collapsed;
+                                    Time Type, cfm1_seo, multi, asc, 10, 100, collapsed;
+                                    Language, cfm3_seo, multi, asc, 10, 100, collapsed;
+                                    Workstyle, cfm2_seo, multi, asc, 10, 100, collapsed;
+
+                                    {% endif %}
+                                    {% endcapture %}
+
+                                    {% assign facet_setup = facet_feilds | split: ';' | assign_to: 'facet_setup_split'; %}
+
+                                    {% for facet_attrs in facet_setup_split %}
+                                        <!-- Setting variables for the Facet attributes -->
+                                        {{ facet_attrs | split: ', ' | assign_to: 'facet_attr' }}
+                                        {% assign facet_heading = facet_attr[0] %}
+                                        {% assign facet_field = facet_attr[1] %}
+                                        {% assign facet_type = facet_attr[2] %}
+                                        {% assign facet_order = facet_attr[3] %}
+                                        {% assign facet_num_display = facet_attr[4] %}
+                                        {% assign facet_num_limit = facet_attr[5] %}
+                                        {% assign facet_expanded = facet_attr[6] %}
+
+                                        {% capture facet_num_display_int %}{{ facet_num_display }}{% endcapture %}
+                                        {% assign facet_num_display_int = facet_num_display_int | times: 1 %}
+
+                                        <!-- Setting the Facets -->
+                                        {% if facet_type == "multi" %}
+                                            {{ facet_field | facet_multi: facet_num_limit, facet_order | assign_to: 'fa' }}
+                                            {% assign facets = fa %}
+                                        {% else %}
+                                            {{ facet_field | facet_single: facet_num_limit, facet_order | assign_to: 'fa' }}
+                                            {% assign facets = fa %}
+                                        {% endif %}
+
+                                        {% assign facet_results = facets[facet_field] %}
+
+                                        {{ facet_field | selected_facets_by_name | assign_to: 'fas' }}
+                                        {% assign facet_select = fas %}
+
+                                        {% if facet_results.size > 0 or facet_select.size >= 1 %}
+                                            {% if has_multiple_facet_options == 'false' %}
+                                                <script>$('.facet-section__heading').removeClass('hide');</script>
+                                            {% endif %}
+                                            {% capture has_multiple_facet_options %}true{% endcapture %}
+                                            
+                                            {% if facet_select.size >= 1 %}
+                                                <!-- Set variable to store Facet option Clear Filter link -->
+                                                {% assign clear_filter = "" %}
+                                                {% capture clear_filter %}{{ facet_field | get_facet_url_sans }}{% endcapture %}
+                                            {% endif %}
+
+                                            <div class="facet-item padded-v-small {% if facet_select.size < 1 and facet_expanded != 'expanded' %}facet-item--collapsed plus{% else %}facet-item--expanded minus{% endif %}">
+                                                <div class="padded-v-xsmall">
+                                                    <div class="facet-item__heading">
+                                                        <button class="paragraph-3 space-none js" aria-expanded="{% if facet_expanded != 'expanded' %}false{% else %}true{% endif %}">{{ facet_heading }} <span class="facet-item__heading-expand-collapse"></span></button>
+                                                    </div>
+                                                    <div class="facet-item__options">
+                                                        <div class="space-small"></div>
+                                                        {% assign facet_num_limit_counter = "0" %}
+                                                        {% for facet in facet_results %}
+                                                            {% if facet['permalink'] != "" %}
+
+                                                                {% if facet_num_limit_counter == "0" %}
+                                                                    <div class="facet-item__row">
+                                                                {% endif %}
+
+                                                                {% if facet_num_limit_counter == facet_num_display %}
+                                                                    </div>
+
+                                                                    <div><a class="facet-item__show-more js paragraph-4" ref="{{ facet_field }}" href="javascript: void(0);" rel="nofollow">+ {{ text_show_more }}</a></div>
+
+                                                                    <div class="facet-item__row facet-item__row--hidden" id="facet-item__row--{{ facet_field }}">
+                                                                {% endif %}
+
+                                                                <div class="facet-item__options-item clearfix padded-v-small">
+                                                                    <a href="{{ facet['query'] }}" class="paragraph-4 facet-item__option-link js{% if facet_select.size >= 1 %} selected{% endif %}"{% if facet_select.size >= 1 %} rel="nofollow"{% endif %}>
+                                                                        <span class="facet-item__options-item-type facet-item__options-item-type--{{ facet_type }} {% if facet['is_selected'] == true %}facet-item__options-item-type--selected{% endif %}"></span>
+                                                                        <span class="facet-item__option-item-label">{{ facet["label"] }}</span>
+                                                                        <span class="facet-item__option-item-count">{{ facet["count"] }}<span class="show-for-sr"> {{ text_jobs }}</span></span>
+                                                                        <span class="show-for-sr">{% if facet['is_selected'] == true %}{{ text_selected }}{% endif %}</span>
+                                                                    </a>
+                                                                </div>
+                                                                {% capture facet_num_limit_counter %}{{ facet_num_limit_counter | plus: '1' }}{% endcapture %}
+                                                            {% endif %}
+
+                                                            {% if forloop.last and facet_num_limit_counter != "0" %}
+                                                                </div>
+                                                            {% endif %}
+
+                                                            <!--Keep select facets after "Show More" open-->
+                                                            {% if facet['is_selected'] == true and forloop.index > facet_num_display_int %}
+                                                                <script>
+                                                                    $('.facet-item__show-more.js').addClass('hide');
+                                                                    $('.facet-item__row--hidden').removeClass('facet-item__row--hidden');
+                                                                </script>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div><!--close .facet-item__options-->
+
+                                                    {% if facet_select.size >= 1 %}<div class="padded-v-small text-right"><a href="{{ clear_filter }}" class="facet-item__heading-clear paragraph-4" rel="nofollow">{{ text_clear_filters }}</a></div>{% endif %}
+                                                </div>
+                                            </div><!--close .facet-item-->
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    <div class="padded-v-small hide-for-large">
+                                        <div class="paragraph-4 space-medium">
+                                            <a href="{{ "cfm1_seo,cfm2_seo,cfm3_seo,cfm4_seo,cfm5_seo,cfm6_seo,cfm7_seo,cfm8_seo,cfm9_seo,job_tags_seo,location_country_seo,location_state_seo,location_city_seo" | get_facet_url_sans }}" rel="nofollow" class="facet-item__option-link js color-8">{{ text_clear_all }}</a>
+                                        </div>
+                                        <a href="javascript:void(0);" class="facet-filter-results-button branded-button-1 full-width" rel="nofollow">{{ text_apply_filters }}</a>
+                                    </div>
+                                </div><!--close .facet-section-inner-->
+                            </section>
+                        </div><!--close .facet-section-->
+                    </div>
+                {% endif %}
+
+                <div class="columns {% if jobs.total_entries > 0 and params['saved_jobs'] != '1' %} large-9{% endif %}">
+                    <section>
+                        <div class="jobs-section">
+                            <div class="hide">
+                                {{ notificationlabel | candidate_job_notification_link }}
+                            </div>
+                            <div class="preloader preloader--search">
+                                <div class="facet-jobs-loading hide--- hide-for-print" role="alert" aria-labelledby="facet-jobs-loading">
+                                    <div class="show-for-sr"><label id="facet-jobs-loading">{{ text_loading_jobs }}</label></div>
+                                </div>
+                            </div>
+                            <div class="jobs-section__inner">
+                                {% if no_results_found %}
+                                    {{ text_no_results_found }}
+                                {% else %}
+
+                                    <script>var current_year = new Date().getFullYear();</script>
+                                    <div class="jobs-section__list space-medium">
+                                        <div class="facet-jobs-loaded hide--- hide-for-print" role="alert" aria-labelledby="facet-jobs-loaded">
+                                            <div class="show-for-sr">
+                                                <label id="facet-jobs-loaded">
+                                                    {% if jobs.total_entries > 0 %}
+                                                        {{ text_showing }}
+                                                    {% endif %}
+                                                </label>
+                                            </div>
+                                        </div><!--close .facet-loaded-jobs-->
+                                        
+                                        <script>
+                                            // Sort by functionality
+                                            $('.sortby-mobile').change(function() {
+                                                sortjobs($(this).val());
+                                            });
+                                            
+                                            function sortjobs(new_sortfield) {
+                                                var current_job_url = '{{ request_fullpath | escape_javascript | replace: '%2C',',' }}';
+                                                {% capture params_sortby_escaped %}{{ params['sort_by'] | escape_javascript }}{% endcapture %}
+                                                var params_sortby_escaped = '{{ params_sortby_escaped }}';
+                                                var current_sortfield = '';
+                                                var current_sortorder = '';
+                                                var new_sortorder = '';
+                                                var new_job_url = '';
+
+                                                {% if params['sort_by'] != blank %}
+                                                    {% assign sortbyfield = params_sortby_escaped | split: ',' | assign_to: 'sortby_params' %}
+                                                    current_sortfield = '{{ sortby_params[0] }}';
+                                                    current_sortorder = '{{ sortby_params[1] }}';
+                                                {% endif %}
+
+                                                if (new_sortfield == 'default') {
+                                                    new_sortorder = '';
+                                                }
+                                                else if (new_sortfield == current_sortfield) {
+                                                    if (current_sortorder == 'asc') {
+                                                        new_sortorder = ',desc';
+                                                    }
+                                                    else {
+                                                        new_sortorder = ',asc';
+                                                    }
+                                                }
+                                                else {
+                                                    new_sortorder = ',asc'; 
+                                                }
+
+                                                {% if params['sort_by'] != blank %}
+                                                    new_job_url = current_job_url.replace('{{ params_sortby_escaped }}',new_sortfield+new_sortorder);
+                                                {% elsif request_fullpath contains '?' %}
+                                                    new_job_url = current_job_url+'&sort_by='+new_sortfield+new_sortorder;
+                                                {% else %}
+                                                    new_job_url = current_job_url+'/?sort_by='+new_sortfield+new_sortorder;
+                                                {% endif %}
+                                                ds_tm_get_jobs_ajax(new_job_url);
+                                            }
+                                        </script>
+
+                                        <div class="jobs-section__item-heading background-12 padded-h-large padded-v-medium" href="{{ job.url }}">
+                                            <p class="heading-4 space-none">{{ text_job_list_heading }}</p>
+                                        </div>
+                                        <div class="jobs-section__items">
+                                            {% for job in jobs %}
+                                            <a class="jobs-section__item background-white-opaque padded-medium" href="{{ job.url }}">
+                                                <div class="padded-h-small">
+                                                    <div class="row">
+                                                        <div class="columns small-7 medium-8 large-9">
+                                                            <h4 class="paragraph-3 space-small">
+                                                                {% if cb_site_type == 'external' %}
+                                                                    {{ job.title | html_safe }}
+
+                                                                {% elsif cb_site_type == 'internal' %}
+                                                                    {{ job.cfdisplay_BusinessTitle | html_safe }}
+
+                                                                {% endif %}
+                                                            </h4>
+
+                                                            {% if cb_site_type == 'external' %}
+                                                                {% if job.cfdisplay_job_description_summary != blank %}
+                                                                <div class="paragraph-4">{{ job.cfdisplay_job_description_summary }}</div>
+                                                                {% endif %}
+
+                                                            {% elsif cb_site_type == 'internal' %}
+                                                                <div class="paragraph-4">
+                                                                    {% if job.location.city != blank %}
+                                                                        {{ job.location.city }}{% if job.location.state_prov_short != blank or job.location.country != blank %},{% endif %}
+                                                                    {% endif %}
+                                                                    {% if job.location.state_prov_short != blank %}
+                                                                        {% capture job_location_state_prov_short_no_digit %}{{ job.location.state_prov_short | replace_global_regex: "[\d]", ":::" }}{% endcapture %}
+                                                                        {% if job_location_state_prov_short_no_digit contains ':::' %}
+                                                                            {{ job.location.state_prov }}{% if job.location.country != blank %},{% endif %}
+                                                                        {% else %}
+                                                                            {{ job.location.state_prov_short }}{% if job.location.country != blank %},{% endif %}
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                    {% if job.location.country != blank %}{{ job.location.country }}{% endif %}
+
+                                                                    {% if job.cfdisplay_PositionTimeType != blank %}
+                                                                        &nbsp;&bull;&nbsp;
+                                                                        {{ job.cfdisplay_PositionTimeType }}
+                                                                    {% endif %}
+
+                                                                    &nbsp;&bull;&nbsp;
+                                                                    {{ job.external_id }}
+
+                                                                    {% if job.cfdisplay_publish_to_referral_portal == 'Yes' and job.referral_incentive_amount != blank %}
+                                                                        <br />
+                                                                        Referral Bonus: {% if job.referral_incentive_currency == 'USD' or job.referral_incentive_currency == 'CAD' %}${% elsif job.referral_incentive_currency == 'EUR' %}€{% elsif job.referral_incentive_currency == 'GBP' %}£{% endif %}{{ job.referral_incentive_amount }} ({{ job.referral_incentive_currency }})
+                                                                    {% endif %}
+                                                                </div>
+
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="columns small-3 medium-2 text-center">
+                                                            {% if job.cfdisplay_workstyle != blank %}
+                                                            <div class="jobs-section__item-remote background-12 paragraph-4">{{ job.cfdisplay_workstyle }}</div>
+                                                            {% else %}
+                                                            &nbsp;
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="columns small-2 large-1 text-center">
+                                                            <div class="jobs-section__item-apply background-12 paragraph-4"><i class="fa-solid fa-chevron-right"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>  
+                                            </a>
+                                            {% endfor %}
+                                        </div>
+                                    </div><!--close .jobs-section__list-->
+                                    {% capture arrow_prev %}><i class="fa-solid fa-chevron-left"><span class="show-for-sr">{{ text_previous }}</span></i><{% endcapture %}
+                                    {% capture arrow_next %}><i class="fa-solid fa-chevron-right"><span class="show-for-sr">{{ text_next }}</span></i><{% endcapture %}
+
+                                    <div class="jobs-section__paginate text-center">
+                                        <a href="{{ request_fullpath }}{% if request_fullpath contains '?' %}&{% else %}?{% endif %}page=2" class="jobs-section__paginate-view-more" rel="nofollow">{{ text_view_more_jobs }}</a>
+                                        {{ jobs | paginate | replace: '>previous<',arrow_prev | replace: '>next<',arrow_next }}
+                                    </div>
+                                {% endif %}
+                            </div><!--close .jobs-section__inner-->
+                        </div><!--close .jobs-section-->
+                    </section>
+                </div>
+            </div><!--close .row-->
+
+            {% comment %}Referral Hot Jobs section - only displays if the 'category' page has 'show-referral-hot-jobs' tag; pt. 1/2{% endcomment %}
+            {% if page_object.tag_list contains 'show-referral-hot-jobs' %}
+            <div class="js-referral-hot-jobs--referral-portal page-section layout-testimonials padded-v-xlarge hide"></div>
+            {% endif %}
+        </section><!--close .job-results-->
+
+        {% if cb_site_type != 'internal' %}
+        {% comment %}Hiring Process section{% endcomment %}
+        {% capture page_section_content %}
+        {{ text_our_hiring_process_copy }}
+        {% endcapture %}
+        <section class="page-section layout-hiring-process padded-v-xlarge">
+            {% include '/layout-hiring-process' %}
+        </section>
+        {% endif %}
+    </div><!--close .page-details-wrapper-->
+
+{% endif %}{% comment %}CLOSE Logic for Referral Hot Jobs vs regular Job Search page{% endcomment %}
+
+<script>
+$(document).ready(function() {
+    {% if cb_is_referral_portal_page == 'true' %}
+        {% comment %}Force redirect to url with user's country as a filter - this ensures that the user can only see jobs per their country / region (EU){% endcomment %}
+        // Get the Source of Truth from your Liquid variable. This will either be the long EU string or the single User Country string
+        const rawTarget = "{{ cb_location_country_params }}";
+
+        if (!rawTarget || rawTarget.trim() === "") return;
+
+        // Extract the key (location_country[] or location_country) and the values into an array
+        const paramKey = rawTarget.match(/&?([^=]+)=/)[1];
+        const targetValues = rawTarget.split('&' + paramKey + '=').filter(Boolean);
+
+        // Get current URL state
+        const url = new URL(window.location.href);
+        const params = url.searchParams;
+        const currentUrlValues = params.getAll(paramKey);
+
+        // Check if the count matches AND if every target value is present in the URL
+        const isMatch = (targetValues.length === currentUrlValues.length) && targetValues.every(val => currentUrlValues.includes(val));
+
+        // If not a match, fix it and redirect
+        if (!isMatch) {
+            // Remove both possible versions to ensure no "leftovers"
+            params.delete('location_country[]');
+            params.delete('location_country');
+
+            // Append the correct values from our Source of Truth
+            targetValues.forEach(value => {
+                params.append(paramKey, value);
+            });
+
+            // Redirect. .toString() handles '?' vs '&' automatically.
+            window.location.search = params.toString();
+        }
+    {% endif %}
+
+    {% comment %}Referral Hot Jobs section - only displays if the 'category' page has 'show-referral-hot-jobs' tag; pt. 2/2{% endcomment %}
+    {% if page_object.tag_list contains 'show-referral-hot-jobs' %}
+        {% comment %}Load Referral Hot Jobs section{% endcomment %}
+        {% capture referral_hot_jobs_query %}location_country={{ cb_user_country }}&cf[publish_to_referral_portal]=Yes&cf[publish_to_referrals_hot_hob]=Yes{% endcapture %}
+        {% capture referral_hot_jobs_url %}{{ root_url }}search/jobs/?{{ referral_hot_jobs_query }}&ns_hotjobs=1{% endcapture %}
+        loadReferralHotJobs('{{ referral_hot_jobs_url }}');
+    {% endif %}
+});
+</script>
+
+{% page_required_footer %}
